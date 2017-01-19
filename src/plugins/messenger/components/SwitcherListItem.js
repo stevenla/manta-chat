@@ -8,7 +8,7 @@ const styles = {
     marginBottom: 5,
     ...(isActive
       ? {}
-      : {opacity: .5}
+      : {opacity: .3}
     ),
   }),
   switcherButton: {
