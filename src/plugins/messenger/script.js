@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
-import {render} from 'react-dom';
+import defaultMenu from 'electron-default-menu';
 import url from 'url';
+import storage from 'electron-json-storage';
+import {render} from 'react-dom';
 import {shell, remote} from 'electron';
+
 const {app, Menu, MenuItem} = remote;
-const defaultMenu = require('electron-default-menu');
+
+import SettingsPanel from './components/SettingsPanel';
 
 const styles = {
   main: {
@@ -16,19 +20,22 @@ const styles = {
   },
   switcher: {
     flex: '0 0 68px',
-    borderRight: '1px solid #CCCCCC',
+    borderRight: '1px solid #1A1D23',
     margin: 0,
     padding: 0,
     paddingTop: 30,
     listStyle: 'none',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    backgroundColor: '#2B303B',
+    WebkitAppRegion: 'drag',
+    userSelect: 'none',
   },
   switcherLi: (isActive) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 15,
+    marginBottom: 5,
     ...(isActive
       ? {}
       : {opacity: .5}
@@ -42,6 +49,25 @@ const styles = {
     padding: 0,
     outline: 'none',
     cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  switcherIcon: {
+    width: 32,
+    height: 32,
+    padding: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: 16,
+  },
+  switcherShortcut: {
+    marginTop: 4,
+    padding: '1px 4px',
+    color: '#9BA3B5',
+    display: 'inline',
+    borderRadius: 4,
   },
   webviewContainer: {
     flex: 1,
@@ -61,23 +87,50 @@ const styles = {
       : {visibility: 'hidden'}
     ),
   }),
+  draggable: {
+    height: 50,
+    width: '100%',
+    position: 'absolute',
+    zIndex: 999,
+    userSelect: 'none',
+    WebkitAppRegion: 'drag',
+    pointerEvents: 'none',
+  }
 };
-
-const urls = [
-  {name: 'Messenger', url: 'https://messenger.com', icon: 'messenger.png'},
-  {name: 'Work Chat', url: 'https://fb.messenger.com', icon: 'workplace.png'},
-];
 
 class MantaChat extends Component {
   state = {
     active: 0,
+    urls: [],
+    isSettingsOpen: false,
   };
 
   componentDidMount() {
-    document.querySelectorAll('webview').forEach(webView => {
-      webView.addEventListener('new-window', this.handleLinkClick);
-    });
+    this.attachClickHandlers();
+    this.reloadUrls();
+  }
 
+  componentWillUnmount() {
+    this.detachClickHandlers();
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    this.buildMenus(nextState.urls);
+  }
+
+  reloadUrls() {
+    storage.get('urls', (error, data) => {
+      const urls = data.result || [];
+      this.setState({urls});
+    });
+  }
+
+  handleSettingsChange = (urls) =>{
+    this.setState({ urls, isSettingsOpen: false });
+    storage.set('urls', {result: urls});
+  }
+
+  buildMenus(urls) {
     const menu = defaultMenu(app, shell);
     menu[3].submenu.splice(3, 1, ...urls.map(({name}, index) => ({
         accelerator: `CmdOrCtrl+${index + 1}`,
@@ -86,6 +139,18 @@ class MantaChat extends Component {
       }))
     );
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
+  }
+
+  attachClickHandlers = () => {
+    document.querySelectorAll('webview').forEach(webView => {
+      webView.addEventListener('new-window', this.handleLinkClick);
+    });
+  }
+
+  detachClickHandlers = () => {
+    document.querySelectorAll('webview').forEach(webView => {
+      webView.removeEventListener('new-window', this.handleLinkClick);
+    });
   }
 
   handleLinkClick(event) {
@@ -98,21 +163,38 @@ class MantaChat extends Component {
   render() {
     return (
       <div style={styles.main}>
+        <div style={styles.draggable} />
+        <SettingsPanel
+          urls={this.state.urls}
+          onChange={this.handleSettingsChange}
+          isOpen={this.state.isSettingsOpen}
+          onClose={() => this.setState({isSettingsOpen: false})}
+        />
         <ul style={styles.switcher}>
-          {urls.map(({url, icon}, index) =>
+          {this.state.urls.map(({url, icon}, index) =>
             <li key={url} style={styles.switcherLi(this.state.active === index)}>
               <button
                 onClick={() => this.setState({active: index})}
                 style={styles.switcherButton}
               >
-                <img src={`./icons/${icon}`} />
-                <div>⌘{index + 1}</div>
+                <img
+                  src={`./icons/${icon}`}
+                  style={styles.switcherIcon}
+                />
+                <div style={styles.switcherShortcut}>⌘{index + 1}</div>
               </button>
             </li>
           )}
+          <li
+            style={{ flex: '0 0', marginTop: 'auto' }}
+          >
+            <button style={styles.switcherButton} onClick={() => this.setState({isSettingsOpen: true})}>
+              settings
+            </button>
+          </li>
         </ul>
         <div style={styles.webviewContainer}>
-          {urls.map(({url}, index) =>
+          {this.state.urls.map(({url}, index) =>
             <webview
               key={url}
               src={url}
