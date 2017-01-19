@@ -12,7 +12,6 @@ export default class PluginManager extends EventEmitter {
       try {
         // Get the filename from config
         const pluginRoot = join('./plugins/', pluginName);
-        const config = require('./' + join(pluginRoot, 'plugin.json'));
 
         // Require the correct plugin
         if (this.type) {

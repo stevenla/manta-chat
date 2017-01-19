@@ -21,8 +21,5 @@
     "gulp-rimraf": "^0.2.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
-  },
-  "scripts": {
-    "package": "npm run build && ./node_modules/.bin/electron-packager . 'Manta Chat' --platform=darwin --arch=all --icon=manta.icns --ignore=src --prune --overwrite"
   }
 }
