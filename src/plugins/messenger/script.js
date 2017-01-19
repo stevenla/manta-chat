@@ -7,6 +7,7 @@ import SettingsPanel from './components/SettingsPanel';
 import WebAppView from './components/WebAppView';
 import SwitcherListItem from './components/SwitcherListItem';
 import MenuBuilder from './components/MenuBuilder';
+import DraggableArea from './components/DraggableArea';
 
 const styles = {
   main: {
@@ -34,15 +35,6 @@ const styles = {
     flex: 1,
     position: 'relative',
   },
-  draggable: {
-    height: 50,
-    width: '100%',
-    position: 'absolute',
-    zIndex: 999,
-    userSelect: 'none',
-    WebkitAppRegion: 'drag',
-    pointerEvents: 'none',
-  }
 };
 
 class MantaChat extends Component {
@@ -71,7 +63,7 @@ class MantaChat extends Component {
   render() {
     return (
       <div style={styles.main}>
-        <div style={styles.draggable} />
+        <DraggableArea />
         <MenuBuilder urls={this.state.urls} />
         <SettingsPanel
           urls={this.state.urls}
