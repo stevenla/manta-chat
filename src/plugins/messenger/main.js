@@ -18,9 +18,6 @@ export default (plugins) => {
       height: windowState.height,
       fullscreen: windowState.fullScreen,
       titleBarStyle: 'hidden',
-      webPreferences: {
-        // preload: resolve(__dirname, '../../', 'web.js'),
-      },
     });
 
     windowState.manage(mainWindow);

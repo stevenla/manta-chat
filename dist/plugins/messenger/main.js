@@ -29,10 +29,7 @@ exports.default = function (plugins) {
       width: windowState.width,
       height: windowState.height,
       fullscreen: windowState.fullScreen,
-      titleBarStyle: 'hidden',
-      webPreferences: {
-        // preload: resolve(__dirname, '../../', 'web.js'),
-      }
+      titleBarStyle: 'hidden'
     });
 
     windowState.manage(mainWindow);

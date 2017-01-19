@@ -18,6 +18,8 @@ var _electron = require('electron');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -81,13 +83,11 @@ var styles = {
       position: 'absolute',
       bottom: 0,
       left: 0
-    }, _defineProperty(_extends2, 'position', 'absolute'), _defineProperty(_extends2, 'right', 0), _defineProperty(_extends2, 'top', 0), _extends2), isActive ? { zIndex: 999 } : { visibility: 'hidden' });
+    }, _defineProperty(_extends2, 'position', 'absolute'), _defineProperty(_extends2, 'right', 0), _defineProperty(_extends2, 'top', 0), _extends2), isActive ? { zIndex: 10 } : { visibility: 'hidden' });
   }
 };
 
-var webviewStyle = {};
-
-var urls = [{ url: 'https://messenger.com', icon: 'messenger.png' }, { url: 'https://fb.messenger.com', icon: 'workplace.png' }];
+var urls = [{ name: 'Messenger', url: 'https://messenger.com', icon: 'messenger.png' }, { name: 'Work Chat', url: 'https://fb.messenger.com', icon: 'workplace.png' }];
 
 var MantaChat = function (_Component) {
   _inherits(MantaChat, _Component);
@@ -111,29 +111,24 @@ var MantaChat = function (_Component) {
   _createClass(MantaChat, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
+      var _this2 = this,
+          _menu$3$submenu;
 
       document.querySelectorAll('webview').forEach(function (webView) {
         webView.addEventListener('new-window', _this2.handleLinkClick);
       });
 
       var menu = defaultMenu(app, _electron.shell);
-      menu.splice(4, 0, {
-        label: 'Tabs',
-        submenu: [{
-          accelerator: 'CmdOrCtrl+1',
-          label: 'Messenger',
+      (_menu$3$submenu = menu[3].submenu).splice.apply(_menu$3$submenu, [3, 1].concat(_toConsumableArray(urls.map(function (_ref2, index) {
+        var name = _ref2.name;
+        return {
+          accelerator: 'CmdOrCtrl+' + (index + 1),
+          label: name,
           click: function click() {
-            return _this2.setState({ active: 0 });
+            return _this2.setState({ active: index });
           }
-        }, {
-          accelerator: 'CmdOrCtrl+2',
-          label: 'Workplace',
-          click: function click() {
-            return _this2.setState({ active: 1 });
-          }
-        }]
-      });
+        };
+      }))));
       Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
     }
   }, {
@@ -155,9 +150,9 @@ var MantaChat = function (_Component) {
         _react2.default.createElement(
           'ul',
           { style: styles.switcher },
-          urls.map(function (_ref2, index) {
-            var url = _ref2.url,
-                icon = _ref2.icon;
+          urls.map(function (_ref3, index) {
+            var url = _ref3.url,
+                icon = _ref3.icon;
             return _react2.default.createElement(
               'li',
               { key: url, style: styles.switcherLi(_this3.state.active === index) },
@@ -183,8 +178,8 @@ var MantaChat = function (_Component) {
         _react2.default.createElement(
           'div',
           { style: styles.webviewContainer },
-          urls.map(function (_ref3, index) {
-            var url = _ref3.url;
+          urls.map(function (_ref4, index) {
+            var url = _ref4.url;
             return _react2.default.createElement('webview', {
               key: url,
               src: url,

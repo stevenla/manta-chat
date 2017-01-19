@@ -5,7 +5,6 @@ import {shell, remote} from 'electron';
 const {app, Menu, MenuItem} = remote;
 const defaultMenu = require('electron-default-menu');
 
-
 const styles = {
   main: {
     bottom: 0,
@@ -33,7 +32,7 @@ const styles = {
     ...(isActive
       ? {}
       : {opacity: .5}
-    )
+    ),
   }),
   switcherButton: {
     width: 68,
@@ -58,19 +57,15 @@ const styles = {
     right: 0,
     top: 0,
     ...(isActive
-      ? {zIndex: 999}
+      ? {zIndex: 10}
       : {visibility: 'hidden'}
     ),
   }),
 };
 
-const webviewStyle = {
-
-}
-
 const urls = [
-  {url: 'https://messenger.com', icon: 'messenger.png'},
-  {url: 'https://fb.messenger.com', icon: 'workplace.png'},
+  {name: 'Messenger', url: 'https://messenger.com', icon: 'messenger.png'},
+  {name: 'Work Chat', url: 'https://fb.messenger.com', icon: 'workplace.png'},
 ];
 
 class MantaChat extends Component {
@@ -83,31 +78,20 @@ class MantaChat extends Component {
       webView.addEventListener('new-window', this.handleLinkClick);
     });
 
-
     const menu = defaultMenu(app, shell);
-    menu.splice(4, 0, {
-      label: 'Tabs',
-      submenu: [
-        {
-          accelerator: 'CmdOrCtrl+1',
-          label: 'Messenger',
-          click: () => this.setState({active: 0}),
-        },
-        {
-          accelerator: 'CmdOrCtrl+2',
-          label: 'Workplace',
-          click: () => this.setState({active: 1}),
-        },
-      ]
-    });
+    menu[3].submenu.splice(3, 1, ...urls.map(({name}, index) => ({
+        accelerator: `CmdOrCtrl+${index + 1}`,
+        label: name,
+        click: () => this.setState({active: index}),
+      }))
+    );
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
-
   }
 
   handleLinkClick(event) {
     const protocol = url.parse(event.url).protocol;
     if (protocol === 'http:' || protocol === 'https:') {
-        shell.openExternal(event.url);
+      shell.openExternal(event.url);
     }
   }
 
