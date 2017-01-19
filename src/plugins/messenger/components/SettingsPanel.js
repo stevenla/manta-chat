@@ -45,6 +45,13 @@ export default class Settings extends Component {
     this.setState({urls});
   }
 
+  handleMoveUp = (index, event) => {
+    const urls = [...this.state.urls];
+    const [current] = urls.splice(index, 1);
+    urls.splice(index - 1, 0, current);
+    this.setState({urls});
+  }
+
   handleSave = () => {
     this.props.onChange(this.state.urls);
   }
@@ -68,6 +75,7 @@ export default class Settings extends Component {
                 <td>Name</td>
                 <td>Icon</td>
                 <td>URL</td>
+                <td></td>
               </tr>
             </thead>
             <tbody>
@@ -90,6 +98,11 @@ export default class Settings extends Component {
                       onChange={(event) => this.handleChange(index, 'url', event)}
                       value={app.url}
                     />
+                  </td>
+                  <td>
+                    <button onClick={(event) => this.handleMoveUp(index, event)}>
+                      ^
+                    </button>
                   </td>
                 </tr>
               )}
