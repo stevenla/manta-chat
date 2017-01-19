@@ -12,12 +12,11 @@ export default class PluginManager extends EventEmitter {
       try {
         // Get the filename from config
         const pluginRoot = join('./plugins/', pluginName);
-        const config = require('./' + join(pluginRoot, 'midas.json'));
-        const filename = config[this.type];
+        const config = require('./' + join(pluginRoot, 'plugin.json'));
 
         // Require the correct plugin
-        if (filename) {
-          let plugin = require('./' + join(pluginRoot, filename));
+        if (this.type) {
+          let plugin = require('./' + join(pluginRoot, this.type));
           if (plugin.__esModule) {
             plugin = plugin.default;
           }
