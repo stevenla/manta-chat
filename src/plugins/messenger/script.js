@@ -8,6 +8,8 @@ import {shell, remote} from 'electron';
 const {app, Menu, MenuItem} = remote;
 
 import SettingsPanel from './components/SettingsPanel';
+import WebAppView from './components/WebAppView';
+import SwitcherListItem from './components/SwitcherListItem';
 
 const styles = {
   main: {
@@ -31,62 +33,10 @@ const styles = {
     WebkitAppRegion: 'drag',
     userSelect: 'none',
   },
-  switcherLi: (isActive) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 5,
-    ...(isActive
-      ? {}
-      : {opacity: .5}
-    ),
-  }),
-  switcherButton: {
-    width: 68,
-    height: 68,
-    border: 0,
-    backgroundColor: 'transparent',
-    padding: 0,
-    outline: 'none',
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  switcherIcon: {
-    width: 32,
-    height: 32,
-    padding: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: 16,
-  },
-  switcherShortcut: {
-    marginTop: 4,
-    padding: '1px 4px',
-    color: '#9BA3B5',
-    display: 'inline',
-    borderRadius: 4,
-  },
   webviewContainer: {
     flex: 1,
     position: 'relative',
   },
-  webview: (isActive) => ({
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    ...(isActive
-      ? {zIndex: 10}
-      : {visibility: 'hidden'}
-    ),
-  }),
   draggable: {
     height: 50,
     width: '100%',
@@ -106,12 +56,7 @@ class MantaChat extends Component {
   };
 
   componentDidMount() {
-    this.attachClickHandlers();
     this.reloadUrls();
-  }
-
-  componentWillUnmount() {
-    this.detachClickHandlers();
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -141,25 +86,6 @@ class MantaChat extends Component {
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
   }
 
-  attachClickHandlers = () => {
-    document.querySelectorAll('webview').forEach(webView => {
-      webView.addEventListener('new-window', this.handleLinkClick);
-    });
-  }
-
-  detachClickHandlers = () => {
-    document.querySelectorAll('webview').forEach(webView => {
-      webView.removeEventListener('new-window', this.handleLinkClick);
-    });
-  }
-
-  handleLinkClick(event) {
-    const protocol = url.parse(event.url).protocol;
-    if (protocol === 'http:' || protocol === 'https:') {
-      shell.openExternal(event.url);
-    }
-  }
-
   render() {
     return (
       <div style={styles.main}>
@@ -171,34 +97,28 @@ class MantaChat extends Component {
           onClose={() => this.setState({isSettingsOpen: false})}
         />
         <ul style={styles.switcher}>
-          {this.state.urls.map(({url, icon}, index) =>
-            <li key={url} style={styles.switcherLi(this.state.active === index)}>
-              <button
-                onClick={() => this.setState({active: index})}
-                style={styles.switcherButton}
-              >
-                <img
-                  src={`./icons/${icon}`}
-                  style={styles.switcherIcon}
-                />
-                <div style={styles.switcherShortcut}>⌘{index + 1}</div>
-              </button>
-            </li>
+          {this.state.urls.map((app, index) =>
+            <SwitcherListItem
+              key={app.url}
+              icon={app.icon}
+              isActive={index === this.state.active}
+              onClick={() => this.setState({active: index})}
+              shortcutNumber={index + 1}
+            />
           )}
-          <li
-            style={{ flex: '0 0', marginTop: 'auto' }}
-          >
-            <button style={styles.switcherButton} onClick={() => this.setState({isSettingsOpen: true})}>
-              settings
-            </button>
-          </li>
+          <SwitcherListItem
+            icon='./icons/gear.png'
+            isActive
+            onClick={() => this.setState({isSettingsOpen: true})}
+            style={{marginTop: 'auto'}}
+          />
         </ul>
         <div style={styles.webviewContainer}>
           {this.state.urls.map(({url}, index) =>
-            <webview
+            <WebAppView
               key={url}
               src={url}
-              style={styles.webview(this.state.active === index)}
+              isActive={index === this.state.active}
             />
           )}
         </div>
