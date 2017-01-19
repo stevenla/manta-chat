@@ -64,7 +64,10 @@ class MantaChat extends Component {
     return (
       <div style={styles.main}>
         <DraggableArea />
-        <MenuBuilder urls={this.state.urls} />
+        <MenuBuilder
+          urls={this.state.urls}
+          onActiveChange={(index) => this.setState({active: index})}
+        />
         <SettingsPanel
           urls={this.state.urls}
           onChange={this.handleSettingsChange}

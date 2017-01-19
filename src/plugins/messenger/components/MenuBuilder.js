@@ -13,7 +13,7 @@ export default class MenuBuilder extends Component {
     menu[3].submenu.splice(3, 1, ...urls.map(({name}, index) => ({
         accelerator: `CmdOrCtrl+${index + 1}`,
         label: name,
-        click: () => this.setState({active: index}),
+        click: () => this.props.onActiveChange(index),
       }))
     );
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
