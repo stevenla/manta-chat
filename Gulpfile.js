@@ -19,7 +19,7 @@ function handleError(err) {
 
 gulp.task('build:babel', () =>
   gulp.src('src/**/*.js')
-    .pipe(babel())
+    .pipe(babel().on('error', handleError))
     .pipe(gulp.dest('dist'))
 );
 
@@ -32,14 +32,12 @@ gulp.task('build', ['build:babel', 'build:copy']);
 
 gulp.task('watch', ['build'], () =>
   gulp.watch('src/**/*', ['build'])
-    .on('error', handleError)
 );
 
 gulp.task('clean', () =>
   gulp.src('dist')
     .pipe(rimraf())
 );
-
 
 gulp.task('electron:run', (cb) => {
   doSpawn(

@@ -1,15 +1,12 @@
 import React, {Component} from 'react';
-import defaultMenu from 'electron-default-menu';
 import url from 'url';
 import storage from 'electron-json-storage';
 import {render} from 'react-dom';
-import {shell, remote} from 'electron';
-
-const {app, Menu, MenuItem} = remote;
 
 import SettingsPanel from './components/SettingsPanel';
 import WebAppView from './components/WebAppView';
 import SwitcherListItem from './components/SwitcherListItem';
+import MenuBuilder from './components/MenuBuilder';
 
 const styles = {
   main: {
@@ -59,10 +56,6 @@ class MantaChat extends Component {
     this.reloadUrls();
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    this.buildMenus(nextState.urls);
-  }
-
   reloadUrls() {
     storage.get('urls', (error, data) => {
       const urls = data.result || [];
@@ -75,21 +68,11 @@ class MantaChat extends Component {
     storage.set('urls', {result: urls});
   }
 
-  buildMenus(urls) {
-    const menu = defaultMenu(app, shell);
-    menu[3].submenu.splice(3, 1, ...urls.map(({name}, index) => ({
-        accelerator: `CmdOrCtrl+${index + 1}`,
-        label: name,
-        click: () => this.setState({active: index}),
-      }))
-    );
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
-  }
-
   render() {
     return (
       <div style={styles.main}>
         <div style={styles.draggable} />
+        <MenuBuilder urls={this.state.urls} />
         <SettingsPanel
           urls={this.state.urls}
           onChange={this.handleSettingsChange}

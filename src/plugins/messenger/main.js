@@ -35,12 +35,6 @@ export default (plugins) => {
       }
     });
 
-    mainWindow.webContents.on('new-window', function(e, url) {
-      e.preventDefault();
-      require('shell').openExternal(url);
-    });
-
-
     app.on('before-quit', () => {
       isQuitting = true;
     });
