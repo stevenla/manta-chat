@@ -1,6 +1,6 @@
 import {ipcRenderer} from 'electron';
 
-const REFRESH_INTERVAL = 500;
+const REFRESH_INTERVAL = 2000;
 
 function overwriteNotifications() {
   const OldNotification = Notification;
