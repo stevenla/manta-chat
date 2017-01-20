@@ -32,7 +32,7 @@ function overwriteNotifications() {
 
 function startCheckingUnreadCountSlack() {
   setTimeout(() => {
-    const lives = document.querySelectorAll('.unread');
+    const lives = document.querySelectorAll('.client_channels_list_container .unread');
     ipcRenderer.sendToHost('unread', lives.length);
     startCheckingUnreadCountSlack();
   }, REFRESH_INTERVAL);
