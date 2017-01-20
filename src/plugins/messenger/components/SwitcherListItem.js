@@ -6,12 +6,9 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 5,
-    ...(isActive
-      ? {}
-      : {opacity: .3}
-    ),
+    position: 'relative',
   }),
-  switcherButton: {
+  switcherButton: (isActive) => ({
     width: 68,
     height: 68,
     border: 0,
@@ -23,7 +20,12 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-  },
+    transition: 'opacity .1s ease-out',
+    ...(isActive
+      ? {}
+      : {opacity: .3}
+    ),
+  }),
   switcherIcon: {
     width: 32,
     height: 32,
@@ -39,6 +41,23 @@ const styles = {
     display: 'inline',
     borderRadius: 4,
   },
+  unread: {
+    position: 'absolute',
+    right: 6,
+    top: 0,
+    padding: '0 5px',
+    backgroundColor: 'red',
+    color: 'white',
+    fontSize: 10,
+    borderRadius: 8,
+    minWidth: 16,
+    minHeight: 16,
+    textAlign: 'center',
+    lineHeight: '16px',
+    zIndex: 10,
+    fontWeight: 'bold',
+    boxSizing: 'border-box',
+  },
 };
 
 const SwitcherListItem = ({
@@ -47,11 +66,13 @@ const SwitcherListItem = ({
   onClick,
   shortcutNumber,
   style = {},
+  unreadCount,
 }) => (
   <li style={{...styles.switcherLi(isActive), ...style}}>
+    {unreadCount > 0 && <div style={styles.unread}>{unreadCount}</div>}
     <button
       onClick={onClick}
-      style={styles.switcherButton}
+      style={styles.switcherButton(isActive)}
     >
       <img
         src={icon}

@@ -20,7 +20,6 @@ const styles = {
     zIndex: 30,
     padding: 20,
     borderRadius: 5,
-    fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
   }
 }
 

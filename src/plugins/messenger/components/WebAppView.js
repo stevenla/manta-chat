@@ -21,19 +21,29 @@ const styles = {
 
 export default class WebAppView extends Component {
   componentDidMount() {
-    this.attachClickHandlers();
+    this.attachHandlers();
   }
 
   componentWillUnmount() {
-    this.detachClickHandlers();
+    this.detachHandlers();
   }
 
-  attachClickHandlers = () => {
+  attachHandlers = () => {
     this.refs.view.addEventListener('new-window', this.handleLinkClick);
+    this.refs.view.addEventListener('ipc-message', this.handleIpcMessage);
   }
 
-  detachClickHandlers = () => {
+  detachHandlers = () => {
     this.refs.view.removeEventListener('new-window', this.handleLinkClick);
+    this.refs.view.removeEventListener('ipc-message', this.handleIpcMessage);
+  }
+
+  handleIpcMessage = ({channel, args}) => {
+    switch (channel) {
+      case 'unread':
+        this.props.onUnreadChange(this.props.index, args[0]);
+        break;
+    }
   }
 
   handleLinkClick(event) {
@@ -49,6 +59,7 @@ export default class WebAppView extends Component {
         ref='view'
         src={this.props.src}
         style={styles.webview(this.props.isActive)}
+        preload={'file://' + __dirname + '/preload.js'}
       />
     )
   }
