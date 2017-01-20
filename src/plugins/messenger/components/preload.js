@@ -8,7 +8,12 @@ function overwriteNotifications() {
   Notification = function (title, options) {
     // Send the native Notification.
     // You can't catch it, that's why we're doing all of this. :)
-    const notif = new OldNotification(title, options);
+    const opt = {
+      ...options,
+      silent: true,
+    };
+
+    const notif = new OldNotification(title, opt);
 
     let superClick = () => {};
     notif.onclick = () => {
