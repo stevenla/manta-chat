@@ -30,6 +30,14 @@ function overwriteNotifications() {
   Notification.requestPermission = OldNotification.requestPermission;
 }
 
+function startCheckingUnreadCountSlack() {
+  setTimeout(() => {
+    const lives = document.querySelectorAll('.unread');
+    ipcRenderer.sendToHost('unread', lives.length);
+    startCheckingUnreadCountSlack();
+  }, REFRESH_INTERVAL);
+}
+
 function startCheckingUnreadCountMessenger() {
   setTimeout(() => {
     const lives = document.querySelectorAll('[aria-live]');
@@ -40,6 +48,9 @@ function startCheckingUnreadCountMessenger() {
 
 window.addEventListener('load', () => {
   overwriteNotifications();
+  if (location.host.match(/slack\.com/)) {
+    startCheckingUnreadCountSlack();
+  }
   if (location.host.match(/messenger\.com/)) {
     startCheckingUnreadCountMessenger();
   }
