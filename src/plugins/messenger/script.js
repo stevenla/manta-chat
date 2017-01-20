@@ -71,6 +71,10 @@ class MantaChat extends Component {
     remote.app.setBadgeCount(totalUnread);
   }
 
+  handleFocusChange = (index) => {
+    this.setState({active: index});
+  }
+
   render() {
     return (
       <div style={styles.main}>
@@ -111,6 +115,7 @@ class MantaChat extends Component {
               index={index}
               isActive={index === this.state.active}
               onUnreadChange={this.handleUnreadChange}
+              onFocusChange={this.handleFocusChange}
             />
           )}
         </div>

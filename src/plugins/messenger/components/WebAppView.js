@@ -43,6 +43,10 @@ export default class WebAppView extends Component {
       case 'unread':
         this.props.onUnreadChange(this.props.index, args[0]);
         break;
+
+      case 'focus':
+        this.props.onFocusChange(this.props.index);
+        break;
     }
   }
 

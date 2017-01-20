@@ -2,6 +2,29 @@ import {ipcRenderer} from 'electron';
 
 const REFRESH_INTERVAL = 500;
 
+function overwriteNotifications() {
+  const OldNotification = Notification;
+
+  Notification = function (title, options) {
+    // Send the native Notification.
+    // You can't catch it, that's why we're doing all of this. :)
+    const notif = new OldNotification(title, options);
+
+    let superClick = () => {};
+    notif.onclick = () => {
+      ipcRenderer.sendToHost('focus');
+      superClick();
+    };
+    Object.defineProperty(notif, 'onclick', { set: (fn) => superClick = fn });
+
+    return notif;
+  };
+
+  Notification.prototype = OldNotification.prototype;
+  Notification.permission = OldNotification.permission;
+  Notification.requestPermission = OldNotification.requestPermission;
+}
+
 function startCheckingUnreadCountMessenger() {
   setTimeout(() => {
     const lives = document.querySelectorAll('[aria-live]');
@@ -11,6 +34,7 @@ function startCheckingUnreadCountMessenger() {
 }
 
 window.addEventListener('load', () => {
+  overwriteNotifications();
   if (location.host.match(/messenger\.com/)) {
     startCheckingUnreadCountMessenger();
   }
