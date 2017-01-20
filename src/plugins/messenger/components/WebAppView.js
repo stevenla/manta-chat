@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import url from 'url';
+import {shell} from 'electron';
 
 const styles = {
   webview: (isActive) => ({

@@ -26,39 +26,39 @@ const styles = {
 
 export default class Settings extends Component {
   state = {
-    urls: []
+    apps: []
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({urls: nextProps.urls});
+    this.setState({apps: nextProps.apps});
   }
 
   copyUrlsAt = (index) => {
-    const urls = [...this.state.urls];
-    urls[index] = {...urls[index]};
-    return urls;
+    const apps = [...this.state.apps];
+    apps[index] = {...apps[index]};
+    return apps;
   }
 
   handleChange = (index, field, event) => {
-    const urls = this.copyUrlsAt(index);
-    urls[index][field] = event.target.value;
-    this.setState({urls});
+    const apps = this.copyUrlsAt(index);
+    apps[index][field] = event.target.value;
+    this.setState({apps});
   }
 
   handleMoveUp = (index, event) => {
-    const urls = [...this.state.urls];
-    const [current] = urls.splice(index, 1);
-    urls.splice(index - 1, 0, current);
-    this.setState({urls});
+    const apps = [...this.state.apps];
+    const [current] = apps.splice(index, 1);
+    apps.splice(index - 1, 0, current);
+    this.setState({apps});
   }
 
   handleSave = () => {
-    this.props.onChange(this.state.urls);
+    this.props.onChange(this.state.apps);
   }
 
   handleNew = () => {
-    const urls = [...this.state.urls, {}];
-    this.setState({urls});
+    const apps = [...this.state.apps, {}];
+    this.setState({apps});
   }
 
   render() {
@@ -79,7 +79,7 @@ export default class Settings extends Component {
               </tr>
             </thead>
             <tbody>
-              {this.state.urls.map((app, index) =>
+              {this.state.apps.map((app, index) =>
                 <tr key={index}>
                   <td>
                     <input

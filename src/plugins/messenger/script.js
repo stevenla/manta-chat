@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import url from 'url';
 import storage from 'electron-json-storage';
 import {render} from 'react-dom';
 
@@ -40,7 +39,7 @@ const styles = {
 class MantaChat extends Component {
   state = {
     active: 0,
-    urls: [],
+    apps: [],
     isSettingsOpen: false,
   };
 
@@ -49,15 +48,15 @@ class MantaChat extends Component {
   }
 
   reloadUrls() {
-    storage.get('urls', (error, data) => {
-      const urls = data.result || [];
-      this.setState({urls});
+    storage.get('apps', (error, data) => {
+      const apps = data.result || [];
+      this.setState({apps});
     });
   }
 
-  handleSettingsChange = (urls) =>{
-    this.setState({ urls, isSettingsOpen: false });
-    storage.set('urls', {result: urls});
+  handleSettingsChange = (apps) =>{
+    this.setState({ apps, isSettingsOpen: false });
+    storage.set('apps', {result: apps});
   }
 
   render() {
@@ -65,17 +64,17 @@ class MantaChat extends Component {
       <div style={styles.main}>
         <DraggableArea />
         <MenuBuilder
-          urls={this.state.urls}
+          apps={this.state.apps}
           onActiveChange={(index) => this.setState({active: index})}
         />
         <SettingsPanel
-          urls={this.state.urls}
+          apps={this.state.apps}
           onChange={this.handleSettingsChange}
           isOpen={this.state.isSettingsOpen}
           onClose={() => this.setState({isSettingsOpen: false})}
         />
         <ul style={styles.switcher}>
-          {this.state.urls.map((app, index) =>
+          {this.state.apps.map((app, index) =>
             <SwitcherListItem
               key={app.url}
               icon={app.icon}
@@ -92,7 +91,7 @@ class MantaChat extends Component {
           />
         </ul>
         <div style={styles.webviewContainer}>
-          {this.state.urls.map(({url}, index) =>
+          {this.state.apps.map(({url}, index) =>
             <WebAppView
               key={url}
               src={url}
