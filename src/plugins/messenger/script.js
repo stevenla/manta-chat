@@ -63,12 +63,13 @@ class MantaChat extends Component {
   }
 
   handleUnreadChange = (index, count) => {
-    const unreads = {...this.state.unreads};
-    unreads[index] = count;
-    const totalUnread = Object.keys(unreads)
-      .reduce((acc, i) => acc + unreads[i], 0);
-    this.setState({ unreads });
-    remote.app.setBadgeCount(totalUnread);
+    if (this.state.unreads[index] !== count) {
+      const unreads = {...this.state.unreads};
+      unreads[index] = count;
+      const totalUnread = Object.keys(unreads)
+        .reduce((acc, i) => acc + unreads[i], 0);
+      remote.app.setBadgeCount(totalUnread);
+    }
   }
 
   handleFocusChange = (index) => {
