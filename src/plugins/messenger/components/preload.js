@@ -32,8 +32,9 @@ function overwriteNotifications() {
 
 function startCheckingUnreadCountSlack() {
   setTimeout(() => {
-    const allUnreadCount = document.querySelectorAll('.unread').length;
-    const hiddenUnreadCount = document.querySelectorAll('.hidden.unread').length;
+    const allUnreadCount = document.querySelectorAll('.section_holder .unread').length;
+    // const hiddenUnreadCount = document.querySelectorAll('.hidden.unread').length;
+    const hiddenUnreadCount = 0;
     ipcRenderer.sendToHost('unread', allUnreadCount - hiddenUnreadCount);
     startCheckingUnreadCountSlack();
   }, REFRESH_INTERVAL);
