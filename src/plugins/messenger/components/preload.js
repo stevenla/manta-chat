@@ -55,5 +55,6 @@ window.addEventListener('load', () => {
   }
   if (location.host.match(/messenger\.com/)) {
     startCheckingUnreadCountMessenger();
+    window.setCookie('dpr', '2');  // Manually set device pixel ratio
   }
 });

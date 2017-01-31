@@ -55,8 +55,8 @@ export default class Settings extends Component {
     this.props.onChange(this.state.apps);
   }
 
-  handleNew = () => {
-    const apps = [...this.state.apps, {}];
+  handleNew = (options = {}) => {
+    const apps = [...this.state.apps, options];
     this.setState({apps});
   }
 
