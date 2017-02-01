@@ -87,7 +87,14 @@ function addPushbulletStyles() {
   }
   #sidebar > div:first-child { display: none !important }
   #sidebar > div:nth-child(2) { display: none !important }
-  `
+  `;
+  document.addEventListener('click', (event) => {
+    const pushList = document.querySelector('#pushlist');
+    const contains = pushList && pushList.contains(event.target);
+    if (contains) {
+      document.querySelector('#message').focus();
+    }
+  });
 }
 
 window.addEventListener('load', () => {
