@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import url from 'url';
 import {shell} from 'electron';
+import path from 'path';
 
 const styles = {
   webview: (isActive) => ({
@@ -63,7 +64,7 @@ export default class WebAppView extends Component {
         ref='view'
         src={this.props.src}
         style={styles.webview(this.props.isActive)}
-        preload={'file://' + __dirname + '/preload.js'}
+        preload={`file://${path.resolve(__dirname, '..', 'preload.js')}`}
       />
     )
   }
