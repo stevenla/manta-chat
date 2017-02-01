@@ -66,7 +66,6 @@ export default class MantaChatApp extends Component {
       const unreads = {...this.state.unreads};
       unreads[index] = count;
       this.setState({ unreads });
-      console.log(unreads);
       const totalUnread = Object.keys(unreads)
         .reduce((acc, i) => acc + unreads[i], 0);
       remote.app.setBadgeCount(totalUnread);

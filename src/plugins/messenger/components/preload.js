@@ -1,3 +1,4 @@
+// TODO: move most of this logic to separate plugins
 import {ipcRenderer} from 'electron';
 
 const REFRESH_INTERVAL = 2000;
@@ -48,6 +49,47 @@ function startCheckingUnreadCountMessenger() {
   }, REFRESH_INTERVAL);
 }
 
+function addPushbulletStyles() {
+  const sheet = document.createElement('style');
+  document.head.appendChild(sheet);
+  sheet.innerText = `
+  /*
+  #header { display: none !important }
+  #sink > div { top: 0 !important }
+  */
+  #header {
+    height: 50px !important;
+  }
+  .logo {
+    bottom: 10px !important;
+  }
+  .logo img {
+    height: 100% !important;
+    width: auto !important;
+  }
+  #account-btn {
+    width: 30px !important;
+    height: 30px !important;
+    background-size: 30px 30px !important;
+    border-radius: 15px !important;
+    border-width: 2px !important;
+  }
+  #sink > div:nth-child(2) { top: 50px !important }
+  .navigation { display: none !important }
+  #header + div > div > div:first-child { display: none !important }
+  #header + div > div > div:nth-child(2) {
+    left: 0 !important;
+    width: 250px !important;
+  }
+  #mainbar {
+    left: 250px !important;
+    width: auto !important;
+  }
+  #sidebar > div:first-child { display: none !important }
+  #sidebar > div:nth-child(2) { display: none !important }
+  `
+}
+
 window.addEventListener('load', () => {
   overwriteNotifications();
   if (location.host.match(/slack\.com/)) {
@@ -56,5 +98,8 @@ window.addEventListener('load', () => {
   if (location.host.match(/messenger\.com/)) {
     startCheckingUnreadCountMessenger();
     window.setCookie('dpr', '2');  // Manually set device pixel ratio
+  }
+  if (location.host.match(/pushbullet\.com/)) {
+    addPushbulletStyles();
   }
 });
