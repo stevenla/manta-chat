@@ -11,11 +11,11 @@ export default class PluginManager extends EventEmitter {
     pluginNames.forEach(pluginName => {
       try {
         // Get the filename from config
-        const pluginRoot = join('./plugins/', pluginName);
+        const pluginRoot = join(__dirname, 'plugins', pluginName);
 
         // Require the correct plugin
         if (this.type) {
-          let plugin = require('./' + join(pluginRoot, this.type));
+          let plugin = require(join(pluginRoot, this.type));
           if (plugin.__esModule) {
             plugin = plugin.default;
           }
