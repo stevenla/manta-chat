@@ -1,3 +1,8 @@
 [
-  "manta-app"
+  "manta-app",
+  "messenger-retina",
+  "messenger-unread",
+  "notification-focus-view",
+  "slack-unread",
+  "pushbullet-styles"
 ]

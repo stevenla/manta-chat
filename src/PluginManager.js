@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { join } from 'path';
+const enabledPlugins = require('./enabled-plugins.json');
 
 export default class PluginManager extends EventEmitter {
   constructor(type, ...rest) {
@@ -7,7 +8,7 @@ export default class PluginManager extends EventEmitter {
     this.type = type;
   }
 
-  load(pluginNames) {
+  load(pluginNames = enabledPlugins) {
     pluginNames.forEach(pluginName => {
       try {
         // Get the filename from config
