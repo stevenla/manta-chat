@@ -8,8 +8,8 @@ export default class PluginManager extends EventEmitter {
     this.type = type;
   }
 
-  load(pluginNames = enabledPlugins) {
-    pluginNames.forEach(pluginName => {
+  load() {
+    enabledPlugins.forEach(pluginName => {
       try {
         // Get the filename from config
         const pluginRoot = join(__dirname, 'plugins', pluginName);
