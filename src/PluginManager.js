@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { join } from 'path';
+import {resolve} from 'path';
 const enabledPlugins = require('./enabled-plugins.json');
 
 export default class PluginManager extends EventEmitter {
@@ -12,11 +12,11 @@ export default class PluginManager extends EventEmitter {
     enabledPlugins.forEach(pluginName => {
       try {
         // Get the filename from config
-        const pluginRoot = join(__dirname, 'plugins', pluginName);
+        const pluginRoot = resolve(__dirname, 'plugins', pluginName);
 
         // Require the correct plugin
         if (this.type) {
-          let plugin = require(join(pluginRoot, this.type));
+          let plugin = require(resolve(pluginRoot, this.type));
           if (plugin.__esModule) {
             plugin = plugin.default;
           }
