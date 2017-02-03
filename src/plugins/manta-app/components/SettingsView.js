@@ -8,104 +8,135 @@ const {dialog} = require('electron').remote;
 import SwitcherList from './SwitcherList';
 import SwitcherListItem from './SwitcherListItem';
 
+const TEXT_COLOR = '#DBE0E9';
+const TEXT_COLOR_FADED = '#9BA3B6';
+const BACKGROUND_COLOR = '#2B303B';
+const BORDER_COLOR = 'rgba(255, 255, 255, 0.2)';
+
 const AddNewEntryButton = styled.button`
   background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  border: 1px solid ${BORDER_COLOR};
+  color: ${TEXT_COLOR};
   cursor: pointer;
   display: block;
   font-size: 1.25em;
+  font-weight: lighter;
   line-height: 56px;
   padding: 0;
   width: 100%;
-  font-weight: lighter;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
 `;
 
-const AppTable = styled.table`
-  border-spacing: 0;
-  width: 100%;
-  thead tr {
-    height: 30px;
-  }
-  td {
-    padding: 0;
-    padding-right: 10px;
-    margin: 0;
-  }
-  tbody tr {
-    height: 73px;
-    td {
-      padding-bottom: 20px;
-    }
-  }
-  input[type='text'] {
-    box-sizing: border-box;
-    background: transparent;
-    border: 0;
-    color: #eee;
-    padding: 8px;
-    line-height: 12px;
-    border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 100%;
+const Button = styled.button`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  border: 1px solid ${BORDER_COLOR};
+  box-sizing: border-box;
+  color: ${TEXT_COLOR};
+  cursor: pointer;
+  font-weight: lighter;
+  line-height: 28px;
+  padding: 0 12px;
+  white-space: nowrap;
 
-    &:focus {
-      outline: 0;
-      border-color: #fff;
-    }
-  }
-
-  input[type='file'] {
-    position: fixed;
-    top: -1000px;
-  }
-
-  select {
-    width: 100%;
-    height: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #eee;;
-    background: transparent;
-
-    &:focus {
-      outline: 0;
-      border-color: #fff;
-    }
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 `;
 
+const Select = styled.select`
+  appearance: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid ${BORDER_COLOR};
+  box-sizing: border-box;
+  color: ${TEXT_COLOR};
+  cursor: pointer;
+  height: 30px;
+  line-height: 28px;
+  padding: 0 15px;
+  width: 100%;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &:focus {
+    outline: 0;
+    border-color: #fff;
+  }
+`;
+
+const SettingsTitle = styled.div`
+  color: ${TEXT_COLOR_FADED};
+  font-size: 13px;
+  height: 30px;
+  left: 0;
+  line-height: 22px;
+  pointer-events: none;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
+`;
+
+const TextInput = styled.input`
+  box-sizing: border-box;
+  background: transparent;
+  border: 0;
+  color: ${TEXT_COLOR};
+  padding: 8px;
+  line-height: 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+
+  &:focus {
+    outline: 0;
+    border-color: #fff;
+  }
+`;
+
+const AppTable = styled.table`
+  border-spacing: 0;
+  width: 100%;
+  margin-top: 30px;
+
+  td {
+    padding: 0 10px 20px 0;
+    margin: 0;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  tr {
+    height: 73px;
+  }
+`;
+
+const Wrapper = styled.div`
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding-right: 20;
+    display: flex;
+    background-color: ${BACKGROUND_COLOR};
+    color: ${TEXT_COLOR};
+    z-index: 20;
+`;
+
 const styles = {
-  wrapper: {
-    boxSizing: 'border-box',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    top: 0,
-    paddingRight: 69,
-    display: 'flex',
-    backgroundColor: '#2B303B',
-    color: '#eee',
-    zIndex: 20,
-  },
-  body: {
-    padding: 10,
-  },
-  image: {
-    width: 32,
-    height: 32,
-  },
   switcherList: {
-    backgroundColor: '#2B303B',
-    borderRightColor: '#2B303B',
-  },
-  settingsPanel: {
-    paddingTop: 30,
+    backgroundColor: BACKGROUND_COLOR,
+    borderRightColor: BACKGROUND_COLOR,
   },
 };
 
@@ -117,7 +148,7 @@ class IconSelector extends Component {
       dialog.showOpenDialog({
         properties: ['openFile'],
         filters: [
-          {name: 'Images', extensions: ['jpg', 'png', 'gif']},
+          {name: 'Images', extensions: ['jpg', 'png', 'gif', 'svg', 'webp']},
         ],
       },
       (filePaths) => {
@@ -132,10 +163,9 @@ class IconSelector extends Component {
 
   render() {
     return (
-      <select onChange={this.handleSelectChange} value=''>
-        <option disabled hidden value=''>Change Icon</option>
-        <hr />
-        <option value={UPLOAD_ICON}>Upload an icon</option>
+      <Select onChange={this.handleSelectChange} value=''>
+        <option disabled hidden value=''>Change icon</option>
+        <option value={UPLOAD_ICON}>Upload an image</option>
         <hr />
         <option value='./icons/discord.png'>Discord</option>
         <option value='./icons/irc.png'>IRC</option>
@@ -147,7 +177,7 @@ class IconSelector extends Component {
         <option value='./icons/slack.png'>Slack</option>
         <option value='./icons/wechat.png'>Wechat</option>
         <option value='./icons/whatsapp.png'>Whatsapp</option>
-      </select>
+      </Select>
     )
   }
 }
@@ -206,7 +236,8 @@ export default class SettingsView extends Component {
     }
 
     return (
-      <div style={styles.wrapper}>
+      <Wrapper>
+        <SettingsTitle>Manta - Preferences</SettingsTitle>
         <SwitcherList style={styles.switcherList}>
           {this.state.apps.map((app, index) =>
             <SwitcherListItem
@@ -219,20 +250,11 @@ export default class SettingsView extends Component {
         </SwitcherList>
         <div style={{flexGrow: 1}}>
           <AppTable>
-            <thead>
-              <tr style={styles.tableHeader}>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            </thead>
             <tbody>
               {this.state.apps.map((app, index) =>
                 <tr key={index}>
                   <td>
-                    <input
+                    <TextInput
                       type='text'
                       placeholder='Name'
                       onChange={(event) => this.handleChange(index, 'name', event)}
@@ -240,7 +262,7 @@ export default class SettingsView extends Component {
                     />
                   </td>
                   <td>
-                    <input
+                    <TextInput
                       type='text'
                       placeholder='URL'
                       onChange={(event) => this.handleChange(index, 'url', event)}
@@ -254,14 +276,14 @@ export default class SettingsView extends Component {
                     />
                   </td>
                   <td>
-                    <button onClick={(event) => this.handleMoveUp(index, event)}>
-                      ^
-                    </button>
+                    <Button onClick={(event) => this.handleMoveUp(index, event)}>
+                      Move up
+                    </Button>
                   </td>
                   <td>
-                    <button onClick={(event) => this.handleDelete(index, event)}>
-                      x
-                    </button>
+                    <Button onClick={(event) => this.handleDelete(index, event)}>
+                      Remove
+                    </Button>
                   </td>
                 </tr>
               )}
@@ -269,10 +291,10 @@ export default class SettingsView extends Component {
           </AppTable>
 
           <AddNewEntryButton onClick={this.handleNew}>Add new...</AddNewEntryButton>
-          <button onClick={this.handleCancel}>cancel</button>
-          <button onClick={this.handleSave}>save</button>
+          <Button onClick={this.handleCancel}>cancel</Button>
+          <Button onClick={this.handleSave}>save</Button>
         </div>
-      </div>
+      </Wrapper>
     )
   }
 }
