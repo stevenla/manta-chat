@@ -5,7 +5,7 @@ const {app, Menu, MenuItem} = remote;
 
 export default class MenuBuilder extends Component {
   componentWillUpdate(nextProps, nextState) {
-    this.buildMenus(nextProps.apps);
+    setImmediate(() => this.buildMenus(nextProps.apps));
   }
 
   buildMenus(apps) {
@@ -17,7 +17,7 @@ export default class MenuBuilder extends Component {
     });
     menu[2].submenu.splice(1, 0, {
       accelerator: 'CmdOrCtrl+Alt+R',
-      label: 'Reload Active App',
+      label: 'Reload Current Screen',
       click: () => this.props.onActiveReload(),
     });
     menu[3].submenu.splice(3, 1, ...apps.map(({name}, index) => ({
