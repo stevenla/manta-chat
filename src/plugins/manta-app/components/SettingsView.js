@@ -1,27 +1,24 @@
 import React, {Component} from 'react';
 
 const styles = {
-  backdrop: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    zIndex: 20,
-  },
-  wrapper: {
+  wrapper: (isActive) => ({
+    width: '100%',
+    height: '100%',
     position: 'absolute',
-    top: 40,
-    left: 40,
-    bottom: 40,
-    right: 40,
-    backgroundColor: 'white',
-    zIndex: 30,
-    padding: 20,
-    borderRadius: 5,
-  }
-}
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+    display: 'flex',
+    ...(isActive
+      ? {zIndex: 10}
+      : {visibility: 'hidden'}
+    ),
+  }),
+  body: {
+    padding: 10,
+  },
+};
 
 export default class Settings extends Component {
   state = {
@@ -51,6 +48,12 @@ export default class Settings extends Component {
     this.setState({apps});
   }
 
+  handleDelete = (index, event) => {
+    const apps = [...this.state.apps];
+    apps.splice(index, 1);
+    this.setState({apps});
+  }
+
   handleSave = () => {
     this.props.onChange(this.state.apps);
   }
@@ -61,19 +64,16 @@ export default class Settings extends Component {
   }
 
   render() {
-    if (!this.props.isOpen) {
-      return null;
-    }
     return (
-      <div>
-        <div style={styles.backdrop} onClick={this.props.onClose} />
-        <div style={styles.wrapper}>
+      <div style={styles.wrapper(this.props.isActive)}>
+        <div style={styles.body}>
           <table>
             <thead>
               <tr>
                 <td>Name</td>
                 <td>Icon</td>
                 <td>URL</td>
+                <td></td>
                 <td></td>
               </tr>
             </thead>
@@ -101,6 +101,11 @@ export default class Settings extends Component {
                   <td>
                     <button onClick={(event) => this.handleMoveUp(index, event)}>
                       ^
+                    </button>
+                  </td>
+                  <td>
+                    <button onClick={(event) => this.handleDelete(index, event)}>
+                      x
                     </button>
                   </td>
                 </tr>

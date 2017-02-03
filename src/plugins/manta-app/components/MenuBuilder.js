@@ -10,6 +10,16 @@ export default class MenuBuilder extends Component {
 
   buildMenus(apps) {
     const menu = defaultMenu(app, shell);
+    menu[0].submenu.splice(2, 0, {
+      accelerator: 'Cmd+,',
+      label: 'Preferences...',
+      click: () => this.props.onActiveChange(-1),
+    });
+    menu[2].submenu.splice(1, 0, {
+      accelerator: 'CmdOrCtrl+Alt+R',
+      label: 'Reload Active App',
+      click: () => this.props.onActiveReload(),
+    });
     menu[3].submenu.splice(3, 1, ...apps.map(({name}, index) => ({
         accelerator: `CmdOrCtrl+${index + 1}`,
         label: name,

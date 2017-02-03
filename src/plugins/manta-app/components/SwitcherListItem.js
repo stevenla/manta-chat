@@ -78,7 +78,7 @@ const SwitcherListItem = ({
         src={icon}
         style={styles.switcherIcon}
       />
-      {shortcutNumber > 0 &&
+      {shortcutNumber !== undefined &&
         <div style={styles.switcherShortcut}>
           ⌘{shortcutNumber}
         </div>

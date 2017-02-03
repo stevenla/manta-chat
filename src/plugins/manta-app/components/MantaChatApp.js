@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import storage from 'electron-json-storage';
 import {remote} from 'electron';
 
-import SettingsPanel from './SettingsPanel';
+import SettingsView from './SettingsView';
 import WebAppView from './WebAppView';
 import SwitcherListItem from './SwitcherListItem';
 import MenuBuilder from './MenuBuilder';
@@ -76,6 +76,13 @@ export default class MantaChatApp extends Component {
     this.setState({active: index});
   }
 
+  handleActiveReload = () => {
+    if (this.state.active >= 0) {
+      const wv = document.querySelector(`webview:nth-child(${this.state.active + 1})`);
+      wv.reload();
+    }
+  }
+
   render() {
     return (
       <div style={styles.main}>
@@ -83,12 +90,7 @@ export default class MantaChatApp extends Component {
         <MenuBuilder
           apps={this.state.apps}
           onActiveChange={(index) => this.setState({active: index})}
-        />
-        <SettingsPanel
-          apps={this.state.apps}
-          onChange={this.handleSettingsChange}
-          isOpen={this.state.isSettingsOpen}
-          onClose={() => this.setState({isSettingsOpen: false})}
+          onActiveReload={this.handleActiveReload}
         />
         <ul style={styles.switcher}>
           {this.state.apps.map((app, index) =>
@@ -103,8 +105,8 @@ export default class MantaChatApp extends Component {
           )}
           <SwitcherListItem
             icon='./icons/gear.png'
-            isActive
-            onClick={() => this.setState({isSettingsOpen: true})}
+            isActive={this.state.active === -1}
+            onClick={() => this.setState({active: -1})}
             style={{marginTop: 'auto'}}
           />
         </ul>
@@ -119,6 +121,12 @@ export default class MantaChatApp extends Component {
               onFocusChange={this.handleFocusChange}
             />
           )}
+          <SettingsView
+            apps={this.state.apps}
+            onChange={this.handleSettingsChange}
+            isActive={this.state.active === -1}
+            onClose={() => this.setState({isSettingsOpen: false})}
+          />
         </div>
       </div>
     )
