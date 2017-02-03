@@ -61,6 +61,7 @@ export default class IconSelector extends Component {
         <option value={UPLOAD_ICON}>Upload an image</option>
         <hr />
         <option value='./icons/discord.png'>Discord</option>
+        <option value='./icons/hipchat.png'>Hipchat</option>
         <option value='./icons/irc.png'>IRC</option>
         <option value='./icons/line.png'>Line</option>
         <option value='./icons/messenger-work.png'>Messenger for Work</option>
