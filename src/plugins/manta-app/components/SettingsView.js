@@ -109,7 +109,7 @@ class IconSelector extends Component {
   render() {
     return (
       <select onChange={this.handleSelectChange} value=''>
-        <option disabled value=''>Change Icon</option>
+        <option disabled hidden value=''>Change Icon</option>
         <hr />
         <option value={UPLOAD_ICON}>Upload an icon</option>
         <hr />
