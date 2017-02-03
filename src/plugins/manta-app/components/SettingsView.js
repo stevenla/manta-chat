@@ -1,4 +1,50 @@
 import React, {Component} from 'react';
+import {static as Immutable} from 'seamless-immutable';
+import styled from 'styled-components';
+import {base64Sync} from 'base64-img';
+
+const {dialog} = require('electron').remote;
+
+import SwitcherList from './SwitcherList';
+import SwitcherListItem from './SwitcherListItem';
+
+const AppTable = styled.table`
+  border-spacing: 0;
+  width: 100%;
+  thead tr {
+    height: 30px;
+  }
+  td {
+    padding: 0;
+    margin: 0;
+  }
+  tbody tr {
+    height: 73px;
+
+    &:nth-child(odd) {
+      background-color: rgba(0, 0, 0, .1);
+    }
+  }
+  input[type='text'] {
+    box-sizing: border-box;
+    background: transparent;
+    border: 0;
+    color: #eee;
+    padding: 10px 5px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+
+    &:focus {
+      outline: 0;
+      border-bottom: 1px solid #fff;
+    }
+  }
+
+  input[type='file'] {
+    position: fixed;
+    top: -1000px;
+  }
+`;
 
 const styles = {
   wrapper: {
@@ -10,7 +56,8 @@ const styles = {
     right: 0,
     top: 0,
     display: 'flex',
-    backgroundColor: 'white',
+    backgroundColor: '#5B5F67',
+    color: '#eee',
     zIndex: 20,
   },
   body: {
@@ -20,11 +67,18 @@ const styles = {
     width: 32,
     height: 32,
   },
+  switcherList: {
+    backgroundColor: '#5B5F67',
+    borderRightColor: '#5B5F67',
+  },
+  settingsPanel: {
+    paddingTop: 30,
+  },
 };
 
 const BuiltinIcons = (props) => (
-  <select {...props}  >
-    <option disabled>Built in icons</option>
+  <select {...props}>
+    <option disabled selected>Select an Icon</option>
     <option value='./icons/messenger.png'>Messenger</option>
     <option value='./icons/slack.png'>Slack</option>
     <option value='./icons/irc.png'>IRC</option>
@@ -32,15 +86,47 @@ const BuiltinIcons = (props) => (
   </select>
 );
 
+const UPLOAD_ICON = 'UPLOAD_ICON';
+const ICONS = {
+
+}
 class IconSelector extends Component {
+  handleSelectChange = (event) => {
+    const value = event.target.value;
+    if (value === UPLOAD_ICON) {
+      dialog.showOpenDialog({
+        properties: ['openFile'],
+        filters: [
+          {name: 'Images', extensions: ['jpg', 'png', 'gif']},
+        ],
+      },
+      (filePaths) => {
+        const filePath = filePaths[0];
+        const encoded = base64Sync(filePath);
+        this.props.onSetIcon(encoded);
+      });
+    } else {
+      this.props.onSetIcon(event.target.value);
+    }
+  }
+
   render() {
     return (
-      <div />
+      <select onChange={this.handleSelectChange} value=''>
+        <option disabled value=''>Change Icon</option>
+        <hr />
+        <option value={UPLOAD_ICON}>Upload an icon</option>
+        <hr />
+        <option value='./icons/messenger.png'>Messenger</option>
+        <option value='./icons/slack.png'>Slack</option>
+        <option value='./icons/irc.png'>IRC</option>
+        <option value='./icons/workplace.png'>Messenger for Work</option>
+      </select>
     )
   }
 }
 
-export default class Settings extends Component {
+export default class SettingsView extends Component {
   state = {
     apps: []
   }
@@ -51,31 +137,14 @@ export default class Settings extends Component {
     }
   }
 
-  copyUrlsAt = (index) => {
-    const apps = [...this.state.apps];
-    apps[index] = {...apps[index]};
-    return apps;
-  }
-
   handleChange = (index, field, event) => {
-    const apps = this.copyUrlsAt(index);
-    apps[index][field] = event.target.value;
+    const apps = Immutable.setIn(this.state.apps, [index, field], event.target.value);
     this.setState({apps});
   }
 
-  handleSetIcon = (index, event) => {
-    const files = event.target.files;
-    const file = files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (readerEvent) => {
-        const contents = reader.result;
-        const apps = this.copyUrlsAt(index);
-        apps[index].icon = contents;
-        this.setState({apps});
-      }
-      reader.readAsDataURL(file);
-    }
+  handleSetIcon = (index, src) => {
+    const apps = Immutable.setIn(this.state.apps, [index, 'icon'], src);
+    this.setState({apps});
   }
 
   handleMoveUp = (index, event) => {
@@ -100,6 +169,11 @@ export default class Settings extends Component {
     this.setState({apps});
   }
 
+  handleCancel = () => {
+    this.setState({apps: this.props.apps});
+    this.props.onClose();
+  }
+
   render() {
     if (!this.props.isActive) {
       return null;
@@ -107,11 +181,20 @@ export default class Settings extends Component {
 
     return (
       <div style={styles.wrapper}>
-        <div style={styles.body}>
-          <table>
+        <SwitcherList style={styles.switcherList}>
+          {this.state.apps.map((app, index) =>
+            <SwitcherListItem
+              key={app.url}
+              icon={app.icon}
+              isActive
+              shortcutNumber={index + 1}
+            />
+          )}
+        </SwitcherList>
+        <div style={{flexGrow: 1}}>
+          <AppTable>
             <thead>
-              <tr>
-                <td></td>
+              <tr style={styles.tableHeader}>
                 <td>Name</td>
                 <td>Icon</td>
                 <td>URL</td>
@@ -123,29 +206,21 @@ export default class Settings extends Component {
               {this.state.apps.map((app, index) =>
                 <tr key={index}>
                   <td>
-                    <img src={app.icon} style={styles.image} />
-                  </td>
-                  <td>
                     <input
+                      type='text'
                       onChange={(event) => this.handleChange(index, 'name', event)}
                       value={app.name}
                     />
                   </td>
                   <td>
-                    <input
-                      onChange={(event) => this.handleChange(index, 'icon', event)}
+                    <IconSelector
+                      onSetIcon={(src) => this.handleSetIcon(index, src)}
                       value={app.icon}
-                    />
-                    <input
-                      type='file'
-                      onChange={(event) => this.handleSetIcon(index, event)}
-                    />
-                    <BuiltinIcons
-                      onChange={(event) => this.handleChange(index, 'icon', event)}
                     />
                   </td>
                   <td>
                     <input
+                      type='text'
                       onChange={(event) => this.handleChange(index, 'url', event)}
                       value={app.url}
                     />
@@ -163,9 +238,10 @@ export default class Settings extends Component {
                 </tr>
               )}
             </tbody>
-          </table>
+          </AppTable>
+
           <button onClick={this.handleNew}>new</button>
-          <button onClick={this.props.onClose}>cancel</button>
+          <button onClick={this.handleCancel}>cancel</button>
           <button onClick={this.handleSave}>save</button>
         </div>
       </div>

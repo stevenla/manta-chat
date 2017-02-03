@@ -33,6 +33,7 @@ const styles = {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     border: '1px solid rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
+    pointerEvents: 'none',
   },
   switcherShortcut: {
     marginTop: 4,

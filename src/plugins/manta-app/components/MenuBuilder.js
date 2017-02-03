@@ -13,7 +13,7 @@ export default class MenuBuilder extends Component {
     menu[0].submenu.splice(2, 0, {
       accelerator: 'Cmd+,',
       label: 'Preferences...',
-      click: () => this.props.onActiveChange(-1),
+      click: () => this.props.onSettingsOpen(),
     });
     menu[2].submenu.splice(1, 0, {
       accelerator: 'CmdOrCtrl+Alt+R',

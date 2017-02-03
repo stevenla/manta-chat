@@ -4,6 +4,7 @@ import {remote} from 'electron';
 
 import SettingsView from './SettingsView';
 import WebAppView from './WebAppView';
+import SwitcherList from './SwitcherList';
 import SwitcherListItem from './SwitcherListItem';
 import MenuBuilder from './MenuBuilder';
 import DraggableArea from './DraggableArea';
@@ -17,19 +18,6 @@ const styles = {
     position: 'absolute',
     right: 0,
     top: 0,
-  },
-  switcher: {
-    flex: '0 0 68px',
-    borderRight: '1px solid #1A1D23',
-    margin: 0,
-    padding: 0,
-    paddingTop: 30,
-    listStyle: 'none',
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: '#2B303B',
-    WebkitAppRegion: 'drag',
-    userSelect: 'none',
   },
   webviewContainer: {
     flex: 1,
@@ -90,6 +78,7 @@ export default class MantaChatApp extends Component {
         <MenuBuilder
           apps={this.state.apps}
           onActiveChange={(index) => this.setState({active: index})}
+          onSettingsOpen={() => this.setState({isSettingsOpen: true})}
           onActiveReload={this.handleActiveReload}
         />
         <SettingsView
@@ -98,7 +87,7 @@ export default class MantaChatApp extends Component {
           isActive={this.state.isSettingsOpen}
           onClose={() => this.setState({isSettingsOpen: false})}
         />
-        <ul style={styles.switcher}>
+        <SwitcherList>
           {this.state.apps.map((app, index) =>
             <SwitcherListItem
               key={app.url}
@@ -115,7 +104,7 @@ export default class MantaChatApp extends Component {
             onClick={() => this.setState({isSettingsOpen: true})}
             style={{marginTop: 'auto'}}
           />
-        </ul>
+        </SwitcherList>
         <div style={styles.webviewContainer}>
           {this.state.apps.map(({url}, index) =>
             <WebAppView
