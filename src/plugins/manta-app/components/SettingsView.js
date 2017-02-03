@@ -120,17 +120,18 @@ const AppTable = styled.table`
 `;
 
 const Wrapper = styled.div`
-    box-sizing: border-box;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    padding-right: 20;
-    display: flex;
-    background-color: ${BACKGROUND_COLOR};
-    color: ${TEXT_COLOR};
-    z-index: 20;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding-right: 20;
+  display: flex;
+  background-color: ${BACKGROUND_COLOR};
+  color: ${TEXT_COLOR};
+  z-index: 20;
+  overflow: scroll;
 `;
 
 const styles = {

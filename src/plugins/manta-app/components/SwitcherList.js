@@ -13,6 +13,7 @@ const styles = {
     backgroundColor: '#2B303B',
     WebkitAppRegion: 'drag',
     userSelect: 'none',
+    overflow: 'scroll',
   },
 };
 

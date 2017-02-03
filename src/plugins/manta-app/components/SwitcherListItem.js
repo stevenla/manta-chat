@@ -7,6 +7,7 @@ const styles = {
     justifyContent: 'center',
     marginBottom: 5,
     position: 'relative',
+    flexShrink: 0,
   }),
   switcherButton: (isActive) => ({
     width: 68,
