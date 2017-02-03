@@ -92,6 +92,12 @@ export default class MantaChatApp extends Component {
           onActiveChange={(index) => this.setState({active: index})}
           onActiveReload={this.handleActiveReload}
         />
+        <SettingsView
+          apps={this.state.apps}
+          onChange={this.handleSettingsChange}
+          isActive={this.state.isSettingsOpen}
+          onClose={() => this.setState({isSettingsOpen: false})}
+        />
         <ul style={styles.switcher}>
           {this.state.apps.map((app, index) =>
             <SwitcherListItem
@@ -105,8 +111,8 @@ export default class MantaChatApp extends Component {
           )}
           <SwitcherListItem
             icon='./icons/gear.png'
-            isActive={this.state.active === -1}
-            onClick={() => this.setState({active: -1})}
+            isActive={this.state.isSettingsOpen}
+            onClick={() => this.setState({isSettingsOpen: true})}
             style={{marginTop: 'auto'}}
           />
         </ul>
@@ -121,12 +127,6 @@ export default class MantaChatApp extends Component {
               onFocusChange={this.handleFocusChange}
             />
           )}
-          <SettingsView
-            apps={this.state.apps}
-            onChange={this.handleSettingsChange}
-            isActive={this.state.active === -1}
-            onClose={() => this.setState({isSettingsOpen: false})}
-          />
         </div>
       </div>
     )

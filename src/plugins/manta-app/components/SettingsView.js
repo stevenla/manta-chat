@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 const styles = {
-  wrapper: (isActive) => ({
+  wrapper: {
     width: '100%',
     height: '100%',
     position: 'absolute',
@@ -10,15 +10,35 @@ const styles = {
     right: 0,
     top: 0,
     display: 'flex',
-    ...(isActive
-      ? {zIndex: 10}
-      : {visibility: 'hidden'}
-    ),
-  }),
+    backgroundColor: 'white',
+    zIndex: 20,
+  },
   body: {
     padding: 10,
   },
+  image: {
+    width: 32,
+    height: 32,
+  },
 };
+
+const BuiltinIcons = (props) => (
+  <select {...props}  >
+    <option disabled>Built in icons</option>
+    <option value='./icons/messenger.png'>Messenger</option>
+    <option value='./icons/slack.png'>Slack</option>
+    <option value='./icons/irc.png'>IRC</option>
+    <option value='./icons/workplace.png'>Messenger for Work</option>
+  </select>
+);
+
+class IconSelector extends Component {
+  render() {
+    return (
+      <div />
+    )
+  }
+}
 
 export default class Settings extends Component {
   state = {
@@ -26,7 +46,9 @@ export default class Settings extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({apps: nextProps.apps});
+    if (nextProps.apps !== this.props.apps) {
+      this.setState({apps: nextProps.apps});
+    }
   }
 
   copyUrlsAt = (index) => {
@@ -39,6 +61,21 @@ export default class Settings extends Component {
     const apps = this.copyUrlsAt(index);
     apps[index][field] = event.target.value;
     this.setState({apps});
+  }
+
+  handleSetIcon = (index, event) => {
+    const files = event.target.files;
+    const file = files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (readerEvent) => {
+        const contents = reader.result;
+        const apps = this.copyUrlsAt(index);
+        apps[index].icon = contents;
+        this.setState({apps});
+      }
+      reader.readAsDataURL(file);
+    }
   }
 
   handleMoveUp = (index, event) => {
@@ -64,12 +101,17 @@ export default class Settings extends Component {
   }
 
   render() {
+    if (!this.props.isActive) {
+      return null;
+    }
+
     return (
-      <div style={styles.wrapper(this.props.isActive)}>
+      <div style={styles.wrapper}>
         <div style={styles.body}>
           <table>
             <thead>
               <tr>
+                <td></td>
                 <td>Name</td>
                 <td>Icon</td>
                 <td>URL</td>
@@ -81,6 +123,9 @@ export default class Settings extends Component {
               {this.state.apps.map((app, index) =>
                 <tr key={index}>
                   <td>
+                    <img src={app.icon} style={styles.image} />
+                  </td>
+                  <td>
                     <input
                       onChange={(event) => this.handleChange(index, 'name', event)}
                       value={app.name}
@@ -90,6 +135,13 @@ export default class Settings extends Component {
                     <input
                       onChange={(event) => this.handleChange(index, 'icon', event)}
                       value={app.icon}
+                    />
+                    <input
+                      type='file'
+                      onChange={(event) => this.handleSetIcon(index, event)}
+                    />
+                    <BuiltinIcons
+                      onChange={(event) => this.handleChange(index, 'icon', event)}
                     />
                   </td>
                   <td>
