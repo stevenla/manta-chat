@@ -16,13 +16,13 @@ const AppTable = styled.table`
   }
   td {
     padding: 0;
+    padding-right: 10px;
     margin: 0;
   }
   tbody tr {
     height: 73px;
-
-    &:nth-child(odd) {
-      background-color: rgba(0, 0, 0, .1);
+    td {
+      padding-bottom: 30px;
     }
   }
   input[type='text'] {
@@ -30,19 +30,28 @@ const AppTable = styled.table`
     background: transparent;
     border: 0;
     color: #eee;
-    padding: 10px 5px;
-    border-bottom: 1px solid #ddd;
+    padding: 5px 0 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     width: 100%;
 
     &:focus {
       outline: 0;
-      border-bottom: 1px solid #fff;
+      padding: 5px 0 5px;
+      border-bottom: 2px solid #fff;
     }
   }
 
   input[type='file'] {
     position: fixed;
     top: -1000px;
+  }
+
+  select {
+    width: 100%;
+    height: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #eee;;
+    background: transparent;
   }
 `;
 
@@ -76,20 +85,7 @@ const styles = {
   },
 };
 
-const BuiltinIcons = (props) => (
-  <select {...props}>
-    <option disabled selected>Select an Icon</option>
-    <option value='./icons/messenger.png'>Messenger</option>
-    <option value='./icons/slack.png'>Slack</option>
-    <option value='./icons/irc.png'>IRC</option>
-    <option value='./icons/workplace.png'>Messenger for Work</option>
-  </select>
-);
-
 const UPLOAD_ICON = 'UPLOAD_ICON';
-const ICONS = {
-
-}
 class IconSelector extends Component {
   handleSelectChange = (event) => {
     const value = event.target.value;
@@ -121,6 +117,7 @@ class IconSelector extends Component {
         <option value='./icons/slack.png'>Slack</option>
         <option value='./icons/irc.png'>IRC</option>
         <option value='./icons/workplace.png'>Messenger for Work</option>
+        <option value='./icons/pushbullet.png'>Pushbullet</option>
       </select>
     )
   }
@@ -195,9 +192,9 @@ export default class SettingsView extends Component {
           <AppTable>
             <thead>
               <tr style={styles.tableHeader}>
-                <td>Name</td>
-                <td>Icon</td>
-                <td>URL</td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -208,21 +205,23 @@ export default class SettingsView extends Component {
                   <td>
                     <input
                       type='text'
+                      placeholder='Name'
                       onChange={(event) => this.handleChange(index, 'name', event)}
                       value={app.name}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type='text'
+                      placeholder='URL'
+                      onChange={(event) => this.handleChange(index, 'url', event)}
+                      value={app.url}
                     />
                   </td>
                   <td>
                     <IconSelector
                       onSetIcon={(src) => this.handleSetIcon(index, src)}
                       value={app.icon}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type='text'
-                      onChange={(event) => this.handleChange(index, 'url', event)}
-                      value={app.url}
                     />
                   </td>
                   <td>
