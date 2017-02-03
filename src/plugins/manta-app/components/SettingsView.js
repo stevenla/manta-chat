@@ -65,7 +65,7 @@ const styles = {
     right: 0,
     top: 0,
     display: 'flex',
-    backgroundColor: '#5B5F67',
+    backgroundColor: '#2B303B',
     color: '#eee',
     zIndex: 20,
   },
@@ -77,8 +77,8 @@ const styles = {
     height: 32,
   },
   switcherList: {
-    backgroundColor: '#5B5F67',
-    borderRightColor: '#5B5F67',
+    backgroundColor: '#2B303B',
+    borderRightColor: '#2B303B',
   },
   settingsPanel: {
     paddingTop: 30,
