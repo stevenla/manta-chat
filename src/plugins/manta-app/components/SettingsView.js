@@ -137,11 +137,16 @@ class IconSelector extends Component {
         <hr />
         <option value={UPLOAD_ICON}>Upload an icon</option>
         <hr />
-        <option value='./icons/messenger.png'>Messenger</option>
-        <option value='./icons/slack.png'>Slack</option>
+        <option value='./icons/discord.png'>Discord</option>
         <option value='./icons/irc.png'>IRC</option>
-        <option value='./icons/workplace.png'>Messenger for Work</option>
+        <option value='./icons/line.png'>Line</option>
+        <option value='./icons/messenger-work.png'>Messenger for Work</option>
+        <option value='./icons/messenger.png'>Messenger</option>
         <option value='./icons/pushbullet.png'>Pushbullet</option>
+        <option value='./icons/pusheen.png'>Pusheen</option>
+        <option value='./icons/slack.png'>Slack</option>
+        <option value='./icons/wechat.png'>Wechat</option>
+        <option value='./icons/whatsapp.png'>Whatsapp</option>
       </select>
     )
   }
