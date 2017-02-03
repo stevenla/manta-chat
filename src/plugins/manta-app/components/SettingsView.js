@@ -8,6 +8,24 @@ const {dialog} = require('electron').remote;
 import SwitcherList from './SwitcherList';
 import SwitcherListItem from './SwitcherListItem';
 
+const AddNewEntryButton = styled.button`
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  cursor: pointer;
+  display: block;
+  font-size: 1.25em;
+  line-height: 56px;
+  padding: 0;
+  width: 100%;
+  font-weight: lighter;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+`;
+
 const AppTable = styled.table`
   border-spacing: 0;
   width: 100%;
@@ -22,7 +40,7 @@ const AppTable = styled.table`
   tbody tr {
     height: 73px;
     td {
-      padding-bottom: 30px;
+      padding-bottom: 20px;
     }
   }
   input[type='text'] {
@@ -30,14 +48,15 @@ const AppTable = styled.table`
     background: transparent;
     border: 0;
     color: #eee;
-    padding: 5px 0 6px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    line-height: 12px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     width: 100%;
 
     &:focus {
       outline: 0;
-      padding: 5px 0 5px;
-      border-bottom: 2px solid #fff;
+      border-color: #fff;
     }
   }
 
@@ -52,18 +71,23 @@ const AppTable = styled.table`
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: #eee;;
     background: transparent;
+
+    &:focus {
+      outline: 0;
+      border-color: #fff;
+    }
   }
 `;
 
 const styles = {
   wrapper: {
-    width: '100%',
-    height: '100%',
+    boxSizing: 'border-box',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     top: 0,
+    paddingRight: 69,
     display: 'flex',
     backgroundColor: '#2B303B',
     color: '#eee',
@@ -239,7 +263,7 @@ export default class SettingsView extends Component {
             </tbody>
           </AppTable>
 
-          <button onClick={this.handleNew}>new</button>
+          <AddNewEntryButton onClick={this.handleNew}>Add new...</AddNewEntryButton>
           <button onClick={this.handleCancel}>cancel</button>
           <button onClick={this.handleSave}>save</button>
         </div>
