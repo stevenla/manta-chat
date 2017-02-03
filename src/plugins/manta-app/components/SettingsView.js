@@ -2,20 +2,19 @@ import React, {Component} from 'react';
 import {static as Immutable} from 'seamless-immutable';
 import styled from 'styled-components';
 
+import Colors from './common/Colors';
+import Button from './common/Button';
+
 import SwitcherList from './SwitcherList';
 import SwitcherListItem from './SwitcherListItem';
 import IconSelector from './IconSelector';
 
-const TEXT_COLOR = '#DBE0E9';
-const TEXT_COLOR_FADED = '#9BA3B6';
-const BACKGROUND_COLOR = '#2B303B';
-const BORDER_COLOR = 'rgba(255, 255, 255, 0.2)';
-
 const AddNewEntryButton = styled.button`
-  background: rgba(255, 255, 255, 0.05);
+  background: ${Colors.BUTTON_BACKGROUND};
   border-radius: 10px;
-  border: 1px solid ${BORDER_COLOR};
-  color: ${TEXT_COLOR};
+  border: 1px solid ${Colors.BORDER};
+  box-sizing: border-box;
+  color: ${Colors.TEXT};
   cursor: pointer;
   display: block;
   font-size: 1.25em;
@@ -25,29 +24,12 @@ const AddNewEntryButton = styled.button`
   width: 100%;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-`;
-
-const Button = styled.button`
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-  border: 1px solid ${BORDER_COLOR};
-  box-sizing: border-box;
-  color: ${TEXT_COLOR};
-  cursor: pointer;
-  font-weight: lighter;
-  line-height: 28px;
-  padding: 0 12px;
-  white-space: nowrap;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: ${Colors.BUTTON_HOVER_BACKGROUND};
   }
 `;
 
 const SettingsTitle = styled.div`
-  color: ${TEXT_COLOR_FADED};
+  color: ${Colors.TEXT_FADED};
   font-size: 13px;
   height: 30px;
   left: 0;
@@ -63,11 +45,11 @@ const TextInput = styled.input`
   box-sizing: border-box;
   background: transparent;
   border: 0;
-  color: ${TEXT_COLOR};
+  color: ${Colors.TEXT};
   padding: 8px;
   line-height: 12px;
   border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid ${Colors.BORDER};
   width: 100%;
 
   &:focus {
@@ -84,6 +66,10 @@ const AppTable = styled.table`
   td {
     padding: 0 10px 20px 0;
     margin: 0;
+
+    &:last-child {
+      padding-right: 0;
+    }
 
     button {
       width: 100%;
@@ -102,18 +88,18 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   top: 0;
-  padding-right: 20;
+  padding-right: 10px;
   display: flex;
-  background-color: ${BACKGROUND_COLOR};
-  color: ${TEXT_COLOR};
+  background-color: ${Colors.BACKGROUND};
+  color: ${Colors.TEXT};
   z-index: 20;
   overflow: scroll;
 `;
 
 const styles = {
   switcherList: {
-    backgroundColor: BACKGROUND_COLOR,
-    borderRightColor: BACKGROUND_COLOR,
+    backgroundColor: Colors.BACKGROUND,
+    borderRightColor: Colors.BACKGROUND,
   },
 };
 

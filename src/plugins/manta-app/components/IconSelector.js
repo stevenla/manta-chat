@@ -57,6 +57,7 @@ export default class IconSelector extends Component {
     return (
       <Select onChange={this.handleSelectChange} value=''>
         <option disabled hidden value=''>Change icon</option>
+        <hr />
         <option value={UPLOAD_ICON}>Upload an image</option>
         <hr />
         <option value='./icons/discord.png'>Discord</option>
