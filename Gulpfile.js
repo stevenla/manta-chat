@@ -3,6 +3,8 @@ const babel = require('gulp-babel');
 const rimraf = require('gulp-rimraf');
 const spawn = require('child_process').spawn;
 const path = require('path');
+const sequence = require('run-sequence');
+
 
 function doSpawn(script, args, cb) {
   const proc = spawn(script, args);
@@ -56,7 +58,7 @@ gulp.task('electron:pkg', ['default'], (cb) => {
       '--platform=darwin',
       '--arch=all',
       '--icon=manta.icns',
-      '--ignore=src',
+      '--ignore=' + path.resolve(__dirname, 'src'),
       '--prune',
       '--overwrite',
     ],
@@ -65,10 +67,10 @@ gulp.task('electron:pkg', ['default'], (cb) => {
 });
 
 gulp.task('dev', ['default'], () => {
-  setTimeout(() => gulp.start('electron:run'), 500);
+  gulp.start('electron:run');
   gulp.start('watch');
 });
 
-gulp.task('default', ['clean'], () =>
-  gulp.start('build')
+gulp.task('default', ['clean'], (done) =>
+  sequence('build', done)
 );
