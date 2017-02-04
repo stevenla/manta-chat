@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {remote} from 'electron';
 
+import PluginManager from '../../../PluginManager';
+
 import SettingsView from './SettingsView';
 import WebAppView from './WebAppView';
 import SwitcherList from './SwitcherList';
@@ -25,6 +27,10 @@ const styles = {
   },
 };
 
+const plugins = new PluginManager('web');
+plugins.load();
+plugins.emit('init');
+
 class MantaChatApp extends Component {
   state = {
     active: 0,
@@ -34,6 +40,10 @@ class MantaChatApp extends Component {
 
   closeSettings = () => this.setState({isSettingsOpen: false});
   openSettings = () => this.setState({isSettingsOpen: true});
+
+  componentDidMount() {
+    plugins.emit('main-app-mounted');
+  }
 
   /**
    * Close the settings view, and save settings in the config

@@ -1,5 +1,8 @@
+import { app, BrowserWindow } from 'electron';
+
 export default (plugins) => {
   plugins.on('main-window-loaded', () => {
-    console.log('logging this to the main console. doesnt do much in live.');
+    const win = new BrowserWindow();
+    win.loadURL(`file://${__dirname}/example.html`);
   });
 };

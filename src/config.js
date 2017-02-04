@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS = {
   plugins: [
     {
       path: 'manta-plugin-example',
-      enabled: true,
+      enabled: false,
       options: {},
     },
   ],
@@ -49,4 +49,8 @@ export function readJSON(cb) {
       cb(null, JSON.parse(data));
     }
   });
+}
+
+export function readJSONSync() {
+  return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
 }
