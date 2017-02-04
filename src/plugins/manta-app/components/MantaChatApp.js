@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import storage from 'electron-json-storage';
 import {remote} from 'electron';
 
 import SettingsView from './SettingsView';
