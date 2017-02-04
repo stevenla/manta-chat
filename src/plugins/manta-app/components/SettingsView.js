@@ -218,7 +218,7 @@ export default class SettingsView extends Component {
             </tbody>
           </AppTable>
 
-          <AddNewEntryButton onClick={this.handleNew}>Add new...</AddNewEntryButton>
+          <AddNewEntryButton onClick={this.handleNew}>Add new site...</AddNewEntryButton>
           <Button onClick={this.handleCancel}>cancel</Button>
           <Button onClick={this.handleSave}>save</Button>
         </div>

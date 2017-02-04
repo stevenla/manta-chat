@@ -32,11 +32,14 @@ class MantaChatApp extends Component {
     isSettingsOpen: false,
   };
 
+  closeSettings = () => this.setState({isSettingsOpen: false});
+  openSettings = () => this.setState({isSettingsOpen: true});
+
   /**
    * Close the settings view, and save settings in the config
    */
   handleSettingsChange = (config) => {
-    this.setState({ isSettingsOpen: false });
+    this.closeSettings();
     this.props.onConfigChange(config);
   }
 
@@ -71,15 +74,15 @@ class MantaChatApp extends Component {
         <DraggableArea />
         <MenuBuilder
           apps={this.props.config.apps}
-          onActiveChange={(index) => this.setState({active: index})}
-          onSettingsOpen={() => this.setState({isSettingsOpen: true})}
+          onActiveChange={this.handleFocusChange}
+          onSettingsOpen={this.openSettings}
           onActiveReload={this.handleActiveReload}
         />
         <SettingsView
           config={this.props.config}
           onChange={this.handleSettingsChange}
           isActive={this.state.isSettingsOpen}
-          onClose={() => this.setState({isSettingsOpen: false})}
+          onClose={this.closeSettings}
         />
         <SwitcherList>
           {this.props.config.apps.map((app, index) =>
@@ -87,7 +90,7 @@ class MantaChatApp extends Component {
               key={app.url}
               icon={app.icon}
               isActive={index === this.state.active}
-              onClick={() => this.setState({active: index})}
+              onClick={() => this.handleFocusChange(index)}
               shortcutNumber={index + 1}
               unreadCount={this.state.unreads[index]}
             />
@@ -95,7 +98,7 @@ class MantaChatApp extends Component {
           <SwitcherListItem
             icon='./icons/gear.png'
             isActive={this.state.isSettingsOpen}
-            onClick={() => this.setState({isSettingsOpen: true})}
+            onClick={this.openSettings}
             style={{marginTop: 'auto'}}
           />
         </SwitcherList>
