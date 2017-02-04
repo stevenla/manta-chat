@@ -1,9 +1,13 @@
 import { EventEmitter } from 'events';
 import {resolve} from 'path';
 import exists from 'node-file-exists';
+import * as config from './config';
+
 const enabledPlugins = require('./enabled-plugins.json');
 
 export default class PluginManager extends EventEmitter {
+  static config = config;
+
   constructor(type, ...rest) {
     super(type, ...rest);
     this.type = type;

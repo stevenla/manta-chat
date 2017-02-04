@@ -113,6 +113,9 @@ export default class SettingsView extends Component {
     if (nextProps.config.apps !== this.props.config.apps) {
       this.setState({apps: nextProps.config.apps});
     }
+    if (nextProps.config.plugins !== this.props.config.plugins) {
+      this.setState({plugins: nextProps.config.plugins});
+    }
   }
 
   handleChange = (index, field, event) => {
