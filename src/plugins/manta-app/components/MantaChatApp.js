@@ -8,6 +8,7 @@ import SwitcherList from './SwitcherList';
 import SwitcherListItem from './SwitcherListItem';
 import MenuBuilder from './MenuBuilder';
 import DraggableArea from './DraggableArea';
+import withDotfiles from './withDotfiles';
 
 const styles = {
   main: {
@@ -25,28 +26,19 @@ const styles = {
   },
 };
 
-export default class MantaChatApp extends Component {
+class MantaChatApp extends Component {
   state = {
     active: 0,
-    apps: [],
     unreads: {},
     isSettingsOpen: false,
   };
 
-  componentDidMount() {
-    this.reloadUrls();
-  }
-
-  reloadUrls() {
-    storage.get('apps', (error, data) => {
-      const apps = data.result || [];
-      this.setState({apps});
-    });
-  }
-
-  handleSettingsChange = (apps) => {
-    this.setState({ apps, isSettingsOpen: false });
-    storage.set('apps', {result: apps});
+  /**
+   * Close the settings view, and save settings in the config
+   */
+  handleSettingsChange = (config) => {
+    this.setState({ isSettingsOpen: false });
+    this.props.onConfigChange(config);
   }
 
   handleUnreadChange = (index, count) => {
@@ -66,8 +58,11 @@ export default class MantaChatApp extends Component {
 
   handleActiveReload = () => {
     if (this.state.active >= 0) {
-      const wv = document.querySelector(`webview:nth-child(${this.state.active + 1})`);
-      wv.reload();
+      // TODO: maybe replce this with refs
+      const webview = document.querySelector(
+        `webview:nth-child(${this.state.active + 1})`
+      );
+      webview.reload();
     }
   }
 
@@ -76,19 +71,19 @@ export default class MantaChatApp extends Component {
       <div style={styles.main}>
         <DraggableArea />
         <MenuBuilder
-          apps={this.state.apps}
+          apps={this.props.config.apps}
           onActiveChange={(index) => this.setState({active: index})}
           onSettingsOpen={() => this.setState({isSettingsOpen: true})}
           onActiveReload={this.handleActiveReload}
         />
         <SettingsView
-          apps={this.state.apps}
+          config={this.props.config}
           onChange={this.handleSettingsChange}
           isActive={this.state.isSettingsOpen}
           onClose={() => this.setState({isSettingsOpen: false})}
         />
         <SwitcherList>
-          {this.state.apps.map((app, index) =>
+          {this.props.config.apps.map((app, index) =>
             <SwitcherListItem
               key={app.url}
               icon={app.icon}
@@ -106,7 +101,7 @@ export default class MantaChatApp extends Component {
           />
         </SwitcherList>
         <div style={styles.webviewContainer}>
-          {this.state.apps.map(({url}, index) =>
+          {this.props.config.apps.map(({url}, index) =>
             <WebAppView
               key={url}
               src={url}
@@ -121,3 +116,5 @@ export default class MantaChatApp extends Component {
     )
   }
 }
+
+export default withDotfiles(MantaChatApp);

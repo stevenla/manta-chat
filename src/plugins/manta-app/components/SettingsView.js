@@ -105,12 +105,13 @@ const styles = {
 
 export default class SettingsView extends Component {
   state = {
-    apps: []
+    apps: [],
+    plugins: [],
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.apps !== this.props.apps) {
-      this.setState({apps: nextProps.apps});
+    if (nextProps.config.apps !== this.props.config.apps) {
+      this.setState({apps: nextProps.config.apps});
     }
   }
 
@@ -138,7 +139,10 @@ export default class SettingsView extends Component {
   }
 
   handleSave = () => {
-    this.props.onChange(this.state.apps);
+    this.props.onChange({
+      apps: this.state.apps.map(app => Immutable.asMutable(app)),
+      plugins: this.state.plugins,
+    });
   }
 
   handleNew = (options = {}) => {
@@ -147,7 +151,7 @@ export default class SettingsView extends Component {
   }
 
   handleCancel = () => {
-    this.setState({apps: this.props.apps});
+    this.setState({apps: this.props.config.apps});
     this.props.onClose();
   }
 
