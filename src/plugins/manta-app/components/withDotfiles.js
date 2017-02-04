@@ -23,7 +23,7 @@ export default function withDotfiles(MyComponent) {
     handleConfigChange = (config) => {
       // TODO: this seriously needs error handling
       this.setState({config});
-      writeJSON(config);
+      writeJSONSync(config);
     }
 
     render() {

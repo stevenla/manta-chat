@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import homedir from 'homedir';
 import mkdirp from 'mkdirp';
+import exists from 'node-file-exists';
 
 const FILE_ROOT = `${homedir()}/.config/manta`;
 const CONFIG_FILE = `${FILE_ROOT}/manta.json`;
@@ -22,13 +23,12 @@ const DEFAULT_SETTINGS = {
   ],
 };
 
-export function writeJSON(json, cb) {
+export function writeJSONSync(json) {
   mkdirp.sync(FILE_ROOT);
   fs.writeFileSync(
     CONFIG_FILE,
     JSON.stringify(json, null, 2),
-    'utf8',
-    cb
+    'utf8'
   );
 }
 
@@ -37,9 +37,8 @@ export function readJSON(cb) {
     if (err) {
       if (err.message.match(/^ENOENT/)) {
         // File doesn't exist, make a default one
-        this.writeJSON(DEFAULT_SETTINGS, () => {
-          cb(null, DEFAULT_SETTINGS);
-        });
+        writeJSONSync(DEFAULT_SETTINGS);
+        cb(null, DEFAULT_SETTINGS);
       } else {
         // We got another error
         alert(`We couldn't load your config. Sorry!`);
@@ -52,5 +51,8 @@ export function readJSON(cb) {
 }
 
 export function readJSONSync() {
+  if (!exists(CONFIG_FILE)) {
+    writeJSONSync(DEFAULT_SETTINGS);
+  }
   return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
 }
