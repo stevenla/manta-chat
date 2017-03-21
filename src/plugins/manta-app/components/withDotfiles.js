@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {readJSON, writeJSON} from '../../../config';
+import {readJSON, writeJSONSync} from '../../../config';
 
 /**
  * Higher order component to link config with ~/.config/manta
