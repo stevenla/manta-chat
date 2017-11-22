@@ -1,6 +1,6 @@
 {
   "name": "manta-chat",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "multi facebook messenger desktop client",
   "main": "./dist/main.js",
   "author": "Steven La <mrstevenla@gmail.com>",
