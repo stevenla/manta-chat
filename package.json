@@ -7,7 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "base64-img": "^1.0.3",
-    "electron": "^1.4.14",
+    "electron": "^1.6.5",
     "electron-default-menu": "^1.0.0",
     "electron-window-state": "^4.0.1",
     "homedir": "^0.6.0",
@@ -24,7 +24,7 @@
     "babel-preset-es2017": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
-    "electron-packager": "^8.5.0",
+    "electron-packager": "^8.6.0",
     "gulp": "latest",
     "gulp-babel": "^6.1.2",
     "gulp-rimraf": "^0.2.1",

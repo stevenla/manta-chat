@@ -14,7 +14,7 @@ const styles = {
     top: 0,
     ...(isActive
       ? {zIndex: 10}
-      : {visibility: 'hidden'}
+      : {opacity: 0}
     ),
   }),
 }
@@ -45,6 +45,7 @@ export default class WebAppView extends Component {
         break;
 
       case 'focus':
+        console.log('focus', channel);
         this.props.onFocusChange(this.props.index);
         break;
     }

@@ -1,3 +1,5 @@
+import {ipcRenderer} from 'electron';
+
 export default (plugins) => {
   plugins.on('load', () => {
     const OldNotification = Notification;
