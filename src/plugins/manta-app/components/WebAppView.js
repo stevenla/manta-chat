@@ -45,7 +45,6 @@ export default class WebAppView extends Component {
         break;
 
       case 'focus':
-        console.log('focus', channel);
         this.props.onFocusChange(this.props.index);
         break;
     }
