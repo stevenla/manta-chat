@@ -15,11 +15,15 @@ export default (plugins) => {
       const notif = new OldNotification(title, opt);
 
       let superClick = () => {};
-      notif.onclick = () => {
+      notif.onclick = (...args) => {
         ipcRenderer.sendToHost('focus');
-        superClick();
+        superClick(...args);
       };
-      Object.defineProperty(notif, 'onclick', { set: (fn) => superClick = fn });
+      Object.defineProperty(notif, 'onclick', {
+        set: (fn) => {
+          superClick = fn;
+        }
+      });
 
       return notif;
     };
