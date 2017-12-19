@@ -17,7 +17,9 @@ export default (plugins) => {
       let superClick = () => {};
       notif.onclick = (...args) => {
         ipcRenderer.sendToHost('focus');
-        superClick(...args);
+        if (typeof superClick === 'function') {
+          superClick.apply(notif, args);
+        }
       };
       Object.defineProperty(notif, 'onclick', {
         set: (fn) => {
