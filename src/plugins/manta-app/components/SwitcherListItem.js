@@ -22,6 +22,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     transition: 'opacity .1s ease-out',
+    WebkitAppRegion: 'no-drag',
     ...(isActive
       ? {}
       : {opacity: .3}
