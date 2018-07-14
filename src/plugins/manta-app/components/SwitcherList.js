@@ -17,8 +17,8 @@ const styles = {
   },
 };
 
-const SwitcherList = ({style, ...props}) => (
-  <ul style={{...styles.switcher, ...style}} {...props} />
+const SwitcherList = ({ style, ...props }) => (
+  <ul style={{ ...styles.switcher, ...style }} {...props} />
 );
 
 export default SwitcherList;

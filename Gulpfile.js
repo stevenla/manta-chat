@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const babel = require('gulp-babel');
+const prettier = require('gulp-prettier');
 const rimraf = require('gulp-rimraf');
 const spawn = require('child_process').spawn;
 const path = require('path');
@@ -25,12 +26,21 @@ gulp.task('build:babel', () =>
     .pipe(gulp.dest('dist'))
 );
 
+gulp.task('build:prettier', () =>
+  gulp.src('src/**/*.js')
+    .pipe(prettier({
+      singleQuote: true,
+      trailingComma: 'all',
+    }).on('error', handleError))
+    .pipe(gulp.dest(file => file.base))
+);
+
 gulp.task('build:copy', () =>
   gulp.src(['src/**/!(*.js)', 'src/**/*.json'])
     .pipe(gulp.dest('dist'))
 );
 
-gulp.task('build', ['build:babel', 'build:copy']);
+gulp.task('build', ['build:prettier', 'build:babel', 'build:copy']);
 
 gulp.task('watch', ['build'], () =>
   gulp.watch('src/**/*', ['build'])

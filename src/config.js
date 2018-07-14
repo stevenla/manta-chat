@@ -25,11 +25,7 @@ const DEFAULT_SETTINGS = {
 
 export function writeJSONSync(json) {
   mkdirp.sync(FILE_ROOT);
-  fs.writeFileSync(
-    CONFIG_FILE,
-    JSON.stringify(json, null, 2),
-    'utf8'
-  );
+  fs.writeFileSync(CONFIG_FILE, JSON.stringify(json, null, 2), 'utf8');
 }
 
 export function readJSON(cb) {

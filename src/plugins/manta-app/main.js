@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import { join, resolve } from 'path';
 
-export default (plugins) => {
+export default plugins => {
   plugins.on('init', () => {
     let isQuitting = false;
 
@@ -27,7 +27,7 @@ export default (plugins) => {
     plugins.emit('main-window-loaded', mainWindow);
 
     // Emitted when the window is closed.
-    mainWindow.on('close', (event) => {
+    mainWindow.on('close', event => {
       // Call a hide instead of a close when window is closed
       if (!isQuitting) {
         event.preventDefault();

@@ -1,4 +1,4 @@
-export default (plugins) => {
+export default plugins => {
   plugins.on('main-app-mounted', () => {
     alert('Hello from manta-plugin-example!');
   });

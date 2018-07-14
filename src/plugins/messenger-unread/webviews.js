@@ -1,7 +1,7 @@
-import {ipcRenderer} from 'electron';
+import { ipcRenderer } from 'electron';
 const REFRESH_INTERVAL = 2000;
 
-export default (plugins) => {
+export default plugins => {
   plugins.on('load', () => {
     if (location.host.match(/messenger\.com/)) {
       setInterval(() => {
@@ -10,4 +10,4 @@ export default (plugins) => {
       }, REFRESH_INTERVAL);
     }
   });
-}
+};

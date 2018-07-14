@@ -1,4 +1,4 @@
-export default (plugins) => {
+export default plugins => {
   plugins.on('load', () => {
     if (location.host.match(/pushbullet\.com/)) {
       const sheet = document.createElement('style');
@@ -36,7 +36,7 @@ export default (plugins) => {
       #sidebar > div:nth-child(2) { display: none !important }
       `;
 
-      document.addEventListener('click', (event) => {
+      document.addEventListener('click', event => {
         const pushList = document.querySelector('#pushlist');
         const contains = pushList && pushList.contains(event.target);
         if (contains) {
@@ -45,4 +45,4 @@ export default (plugins) => {
       });
     }
   });
-}
+};

@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {static as Immutable} from 'seamless-immutable';
+import React, { Component } from 'react';
+import { static as Immutable } from 'seamless-immutable';
 import styled from 'styled-components';
 
 import Colors from './common/Colors';
@@ -107,56 +107,60 @@ export default class SettingsView extends Component {
   state = {
     apps: [],
     plugins: [],
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.config.apps !== this.props.config.apps) {
-      this.setState({apps: nextProps.config.apps});
+      this.setState({ apps: nextProps.config.apps });
     }
     if (nextProps.config.plugins !== this.props.config.plugins) {
-      this.setState({plugins: nextProps.config.plugins});
+      this.setState({ plugins: nextProps.config.plugins });
     }
   }
 
   handleChange = (index, field, event) => {
-    const apps = Immutable.setIn(this.state.apps, [index, field], event.target.value);
-    this.setState({apps});
-  }
+    const apps = Immutable.setIn(
+      this.state.apps,
+      [index, field],
+      event.target.value,
+    );
+    this.setState({ apps });
+  };
 
   handleSetIcon = (index, src) => {
     const apps = Immutable.setIn(this.state.apps, [index, 'icon'], src);
-    this.setState({apps});
-  }
+    this.setState({ apps });
+  };
 
   handleMoveUp = (index, event) => {
     const apps = [...this.state.apps];
     const [current] = apps.splice(index, 1);
     apps.splice(index - 1, 0, current);
-    this.setState({apps});
-  }
+    this.setState({ apps });
+  };
 
   handleDelete = (index, event) => {
     const apps = [...this.state.apps];
     apps.splice(index, 1);
-    this.setState({apps});
-  }
+    this.setState({ apps });
+  };
 
   handleSave = () => {
     this.props.onChange({
       apps: this.state.apps.map(app => Immutable.asMutable(app)),
       plugins: this.state.plugins,
     });
-  }
+  };
 
   handleNew = (options = {}) => {
     const apps = [...this.state.apps, options];
-    this.setState({apps});
-  }
+    this.setState({ apps });
+  };
 
   handleCancel = () => {
-    this.setState({apps: this.props.config.apps});
+    this.setState({ apps: this.props.config.apps });
     this.props.onClose();
-  }
+  };
 
   render() {
     if (!this.props.isActive) {
@@ -167,62 +171,66 @@ export default class SettingsView extends Component {
       <Wrapper>
         <SettingsTitle>Manta - Preferences</SettingsTitle>
         <SwitcherList style={styles.switcherList}>
-          {this.state.apps.map((app, index) =>
+          {this.state.apps.map((app, index) => (
             <SwitcherListItem
               key={app.url}
               icon={app.icon}
               isActive
               shortcutNumber={index + 1}
             />
-          )}
+          ))}
         </SwitcherList>
-        <div style={{flexGrow: 1}}>
+        <div style={{ flexGrow: 1 }}>
           <AppTable>
             <tbody>
-              {this.state.apps.map((app, index) =>
+              {this.state.apps.map((app, index) => (
                 <tr key={index}>
                   <td>
                     <TextInput
-                      type='text'
-                      placeholder='Name'
-                      onChange={(event) => this.handleChange(index, 'name', event)}
+                      type="text"
+                      placeholder="Name"
+                      onChange={event =>
+                        this.handleChange(index, 'name', event)
+                      }
                       value={app.name}
                     />
                   </td>
                   <td>
                     <TextInput
-                      type='text'
-                      placeholder='URL'
-                      onChange={(event) => this.handleChange(index, 'url', event)}
+                      type="text"
+                      placeholder="URL"
+                      onChange={event => this.handleChange(index, 'url', event)}
                       value={app.url}
                     />
                   </td>
                   <td>
                     <IconSelector
-                      onSetIcon={(src) => this.handleSetIcon(index, src)}
+                      onSetIcon={src => this.handleSetIcon(index, src)}
                       value={app.icon}
                     />
                   </td>
                   <td>
-                    <Button onClick={(event) => this.handleMoveUp(index, event)}>
+                    <Button onClick={event => this.handleMoveUp(index, event)}>
                       Move up
                     </Button>
                   </td>
                   <td>
-                    <Button onClick={(event) => this.handleDelete(index, event)}>
+                    <Button onClick={event => this.handleDelete(index, event)}>
                       Remove
                     </Button>
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </AppTable>
 
-          <AddNewEntryButton onClick={this.handleNew}>Add new site...</AddNewEntryButton>
+          <AddNewEntryButton onClick={this.handleNew}>
+            Add new site...
+          </AddNewEntryButton>
           <Button onClick={this.handleCancel}>cancel</Button>
           <Button onClick={this.handleSave}>save</Button>
         </div>
       </Wrapper>
-    )
+    );
   }
 }

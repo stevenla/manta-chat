@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {readJSON, writeJSONSync} from '../../../config';
+import { readJSON, writeJSONSync } from '../../../config';
 
 /**
  * Higher order component to link config with ~/.config/manta
@@ -16,15 +16,15 @@ export default function withDotfiles(MyComponent) {
 
     componentDidMount() {
       readJSON((err, json) => {
-        this.setState({config: json});
-      })
+        this.setState({ config: json });
+      });
     }
 
-    handleConfigChange = (config) => {
+    handleConfigChange = config => {
       // TODO: this seriously needs error handling
-      this.setState({config});
+      this.setState({ config });
       writeJSONSync(config);
-    }
+    };
 
     render() {
       return (

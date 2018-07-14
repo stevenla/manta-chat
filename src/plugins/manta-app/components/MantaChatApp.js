@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {remote} from 'electron';
+import React, { Component } from 'react';
+import { remote } from 'electron';
 
 import PluginManager from '../../../PluginManager';
 
@@ -38,8 +38,8 @@ class MantaChatApp extends Component {
     isSettingsOpen: false,
   };
 
-  closeSettings = () => this.setState({isSettingsOpen: false});
-  openSettings = () => this.setState({isSettingsOpen: true});
+  closeSettings = () => this.setState({ isSettingsOpen: false });
+  openSettings = () => this.setState({ isSettingsOpen: true });
 
   componentDidMount() {
     plugins.emit('main-app-mounted');
@@ -48,35 +48,37 @@ class MantaChatApp extends Component {
   /**
    * Close the settings view, and save settings in the config
    */
-  handleSettingsChange = (config) => {
+  handleSettingsChange = config => {
     this.closeSettings();
     this.props.onConfigChange(config);
-  }
+  };
 
   handleUnreadChange = (index, count) => {
     if (this.state.unreads[index] !== count) {
-      const unreads = {...this.state.unreads};
+      const unreads = { ...this.state.unreads };
       unreads[index] = count;
       this.setState({ unreads });
-      const totalUnread = Object.keys(unreads)
-        .reduce((acc, i) => acc + unreads[i], 0);
+      const totalUnread = Object.keys(unreads).reduce(
+        (acc, i) => acc + unreads[i],
+        0,
+      );
       remote.app.setBadgeCount(totalUnread);
     }
-  }
+  };
 
-  handleFocusChange = (index) => {
-    this.setState({active: index});
-  }
+  handleFocusChange = index => {
+    this.setState({ active: index });
+  };
 
   handleActiveReload = () => {
     if (this.state.active >= 0) {
       // TODO: maybe replce this with refs
       const webview = document.querySelector(
-        `webview:nth-child(${this.state.active + 1})`
+        `webview:nth-child(${this.state.active + 1})`,
       );
       webview.reload();
     }
-  }
+  };
 
   render() {
     return (
@@ -95,7 +97,7 @@ class MantaChatApp extends Component {
           onClose={this.closeSettings}
         />
         <SwitcherList>
-          {this.props.config.apps.map((app, index) =>
+          {this.props.config.apps.map((app, index) => (
             <SwitcherListItem
               key={app.url}
               icon={app.icon}
@@ -104,16 +106,16 @@ class MantaChatApp extends Component {
               shortcutNumber={index + 1}
               unreadCount={this.state.unreads[index]}
             />
-          )}
+          ))}
           <SwitcherListItem
-            icon='./icons/gear.png'
+            icon="./icons/gear.png"
             isActive={this.state.isSettingsOpen}
             onClick={this.openSettings}
-            style={{marginTop: 'auto'}}
+            style={{ marginTop: 'auto' }}
           />
         </SwitcherList>
         <div style={styles.webviewContainer}>
-          {this.props.config.apps.map(({url}, index) =>
+          {this.props.config.apps.map(({ url }, index) => (
             <WebAppView
               key={url}
               src={url}
@@ -122,10 +124,10 @@ class MantaChatApp extends Component {
               onUnreadChange={this.handleUnreadChange}
               onFocusChange={this.handleFocusChange}
             />
-          )}
+          ))}
         </div>
       </div>
-    )
+    );
   }
 }
 

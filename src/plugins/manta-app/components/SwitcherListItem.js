@@ -1,7 +1,7 @@
 import React from 'react';
 
 const styles = {
-  switcherLi: (isActive) => ({
+  switcherLi: isActive => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -9,7 +9,7 @@ const styles = {
     position: 'relative',
     flexShrink: 0,
   }),
-  switcherButton: (isActive) => ({
+  switcherButton: isActive => ({
     width: 68,
     height: 68,
     border: 0,
@@ -23,10 +23,7 @@ const styles = {
     alignItems: 'center',
     transition: 'opacity .1s ease-out',
     WebkitAppRegion: 'no-drag',
-    ...(isActive
-      ? {}
-      : {opacity: .3}
-    ),
+    ...(isActive ? {} : { opacity: 0.3 }),
   }),
   switcherIcon: {
     width: 32,
@@ -71,21 +68,13 @@ const SwitcherListItem = ({
   style = {},
   unreadCount,
 }) => (
-  <li style={{...styles.switcherLi(isActive), ...style}}>
+  <li style={{ ...styles.switcherLi(isActive), ...style }}>
     {unreadCount > 0 && <div style={styles.unread}>{unreadCount}</div>}
-    <button
-      onClick={onClick}
-      style={styles.switcherButton(isActive)}
-    >
-      <img
-        src={icon}
-        style={styles.switcherIcon}
-      />
-      {shortcutNumber !== undefined &&
-        <div style={styles.switcherShortcut}>
-          ⌘{shortcutNumber}
-        </div>
-      }
+    <button onClick={onClick} style={styles.switcherButton(isActive)}>
+      <img src={icon} style={styles.switcherIcon} />
+      {shortcutNumber !== undefined && (
+        <div style={styles.switcherShortcut}>⌘{shortcutNumber}</div>
+      )}
     </button>
   </li>
 );

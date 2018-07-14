@@ -1,10 +1,10 @@
-import {ipcRenderer} from 'electron';
+import { ipcRenderer } from 'electron';
 
-export default (plugins) => {
+export default plugins => {
   plugins.on('load', () => {
     const OldNotification = Notification;
 
-    Notification = function (title, options) {
+    Notification = function(title, options) {
       // Send the native Notification.
       // You can't catch it, that's why we're doing all of this. :)
       const opt = {
@@ -22,9 +22,9 @@ export default (plugins) => {
         }
       };
       Object.defineProperty(notif, 'onclick', {
-        set: (fn) => {
+        set: fn => {
           superClick = fn;
-        }
+        },
       });
 
       return notif;
@@ -34,4 +34,4 @@ export default (plugins) => {
     Notification.permission = OldNotification.permission;
     Notification.requestPermission = OldNotification.requestPermission;
   });
-}
+};
