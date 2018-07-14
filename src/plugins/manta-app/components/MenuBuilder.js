@@ -4,7 +4,7 @@ import defaultMenu from 'electron-default-menu';
 const {app, Menu, MenuItem} = remote;
 
 export default class MenuBuilder extends Component {
-  componentWillUpdate(nextProps, nextState) {
+  componentDidUpdate(nextProps, nextState) {
     setImmediate(() => this.buildMenus(nextProps.apps));
   }
 
