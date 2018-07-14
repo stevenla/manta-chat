@@ -2,3 +2,4 @@
 node_modules
 dist
 *-darwin-x64
+yarn-error.log
