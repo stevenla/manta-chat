@@ -20,6 +20,8 @@ const styles = {
 }
 
 export default class WebAppView extends Component {
+  _webview = React.createRef();
+
   componentDidMount() {
     this.attachHandlers();
   }
@@ -29,13 +31,15 @@ export default class WebAppView extends Component {
   }
 
   attachHandlers = () => {
-    this.refs.view.addEventListener('new-window', this.handleLinkClick);
-    this.refs.view.addEventListener('ipc-message', this.handleIpcMessage);
+    this._webview.current.addEventListener('new-window', this.handleLinkClick);
+    this._webview.current.addEventListener('ipc-message', this.handleIpcMessage);
+    this._webview.current.addEventListener('did-navigate', this.handleNavigate);
   }
 
   detachHandlers = () => {
-    this.refs.view.removeEventListener('new-window', this.handleLinkClick);
-    this.refs.view.removeEventListener('ipc-message', this.handleIpcMessage);
+    this._webview.current.removeEventListener('new-window', this.handleLinkClick);
+    this._webview.current.removeEventListener('ipc-message', this.handleIpcMessage);
+    this._webview.current.removeEventListener('did-navigate', this.handleNavigate);
   }
 
   handleIpcMessage = ({channel, args}) => {
@@ -57,13 +61,21 @@ export default class WebAppView extends Component {
     }
   }
 
+  handleNavigate = (event) => {
+    // HACK: fix slack signin. this should be in its own plugin
+    if (event.url.includes('.slack.com') && (event.url.includes('/signin') || event.url.includes('/signout/done'))) {
+      this._webview.current.loadURL(this.props.src);
+    }
+  }
+
   render() {
     return (
       <webview
-        ref='view'
+        partition="persist:manta"
+        preload={`file://${path.resolve(__dirname, '..', 'preload.js')}`}
+        ref={this._webview}
         src={this.props.src}
         style={styles.webview(this.props.isActive)}
-        preload={`file://${path.resolve(__dirname, '..', 'preload.js')}`}
       />
     )
   }
